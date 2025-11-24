@@ -1,1695 +1,1348 @@
-<div class="container-fluid px-0">
-    <!-- Enhanced Header with History Controls -->
-    <div class="glass-card mb-4">
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                <div class="d-flex align-items-center">
-                    <div class="header-icon">
-                        <i class="bi bi-graph-up-arrow"></i>
-                    </div>
-                    <div>
-                        <h1 class="display-6 fw-bold text-gradient mb-1">Meal Analytics Dashboard</h1>
-                        <p class="text-muted mb-0" id="current-month-display">
-                            Advanced meal tracking & analytics 
-                            <span class="badge bg-info ms-2" id="history-status">Ready</span>
-                        </p>
-                    </div>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2c5aa0;
+            --primary-light: #e8f0fe;
+            --secondary: #6c757d;
+            --success: #28a745;
+            --info: #17a2b8;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --border: #dee2e6;
+            --card-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --hover-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.5;
+        }
+
+        .app-container {
+            max-width: 100%;
+            padding: 15px;
+        }
+
+        /* Header Styles */
+        .app-header {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .app-title {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .app-subtitle {
+            color: var(--secondary);
+            font-size: 0.875rem;
+        }
+
+        .month-indicator {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .control-panel .form-label {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .control-panel .form-select,
+        .control-panel .form-control {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .control-panel .form-select:focus,
+        .control-panel .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: #244a8a;
+            border-color: #244a8a;
+            transform: translateY(-1px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        /* Stats Cards */
+        .stats-card {
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            border: none;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+            height: 100%;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .stats-card .card-body {
+            padding: 20px;
+        }
+
+        .stats-card .card-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stats-card .card-text {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0;
+        }
+
+        .stats-icon {
+            font-size: 2.5rem;
+            opacity: 0.2;
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+        }
+
+        /* Table Styles */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .table-responsive {
+            max-height: 70vh;
+            overflow: auto;
+        }
+
+        .table {
+            margin-bottom: 0;
+            font-size: 0.875rem;
+        }
+
+        .table thead th {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 8px;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .table tbody td {
+            padding: 12px 8px;
+            vertical-align: middle;
+            border-color: var(--border);
+        }
+
+        .name-col {
+            background-color: #f0f4fc;
+            font-weight: 600;
+            position: sticky;
+            left: 0;
+            z-index: 5;
+            min-width: 150px;
+        }
+
+        .total-col {
+            background-color: #e9ecef;
+            font-weight: 700;
+            position: sticky;
+            right: 0;
+            z-index: 5;
+            min-width: 80px;
+        }
+
+        .date-header {
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .date-day {
+            font-size: 1rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .date-weekday {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .meal-cell {
+            min-width: 70px;
+            height: 50px;
+            text-align: center;
+            font-weight: 600;
+            vertical-align: middle;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .meal-cell:hover {
+            background-color: var(--primary-light) !important;
+        }
+
+        /* Value-based cell coloring */
+        .meal-cell.value-0 {
+            background-color: #f8f9fa;
+            color: var(--secondary);
+        }
+
+        .meal-cell.value-1 {
+            background-color: #e8f5e8;
+            color: #2d5a2d;
+        }
+
+        .meal-cell.value-2 {
+            background-color: #e3f2fd;
+            color: #0d47a1;
+        }
+
+        .meal-cell.value-3 {
+            background-color: #fff3e0;
+            color: #e65100;
+        }
+
+        .meal-cell.value-4 {
+            background-color: #fce4ec;
+            color: #880e4f;
+        }
+
+        .meal-cell.value-5-plus {
+            background-color: #f3e5f5;
+            color: #4a148c;
+        }
+
+        .meal-cell.weekend {
+            opacity: 0.8;
+        }
+
+        .meal-cell.editing {
+            background: white !important;
+            border: 2px solid var(--primary) !important;
+            z-index: 100;
+            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.2);
+        }
+
+        .meal-cell input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            text-align: center;
+            font-weight: bold;
+            background: transparent;
+            outline: none;
+            font-size: inherit;
+            color: inherit;
+        }
+
+        /* Alternating row colors */
+        .member-row:nth-child(odd) .name-col {
+            background-color: #f0f4fc;
+        }
+
+        .member-row:nth-child(even) .name-col {
+            background-color: #e6ecf7;
+        }
+
+        .member-row:nth-child(odd) {
+            background-color: #fafbfd;
+        }
+
+        .member-row:nth-child(even) {
+            background-color: #f5f8fc;
+        }
+
+        .summary-row {
+            background-color: #f8f9fa;
+            font-weight: 700;
+        }
+
+        .summary-row .name-col {
+            background-color: #e9ecef;
+        }
+
+        /* Legend */
+        .legend-container {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            margin-right: 5px;
+            border: 1px solid var(--border);
+        }
+
+        /* Saving Indicator */
+        .saving-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .floating-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            font-size: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .floating-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 10px;
+            }
+
+            .app-header {
+                padding: 15px;
+            }
+
+            .app-title {
+                font-size: 1.25rem;
+            }
+
+            .month-indicator {
+                font-size: 0.9rem;
+                padding: 8px 15px;
+            }
+
+            .control-panel {
+                padding: 15px;
+            }
+
+            .stats-card .card-body {
+                padding: 15px;
+            }
+
+            .stats-card .card-text {
+                font-size: 1.5rem;
+            }
+
+            .table {
+                font-size: 0.8rem;
+            }
+
+            .name-col {
+                min-width: 120px;
+            }
+
+            .date-header {
+                min-width: 60px;
+            }
+
+            .meal-cell {
+                min-width: 60px;
+                height: 45px;
+            }
+
+            .floating-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .app-title {
+                font-size: 1.1rem;
+            }
+
+            .month-indicator {
+                font-size: 0.85rem;
+                padding: 6px 12px;
+            }
+
+            .name-col {
+                min-width: 100px;
+            }
+
+            .date-header {
+                min-width: 50px;
+            }
+
+            .meal-cell {
+                min-width: 50px;
+                height: 40px;
+            }
+
+            .date-day {
+                font-size: 0.9rem;
+            }
+
+            .date-weekday {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Scrollbar Styling */
+        .table-responsive::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .table-responsive::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .table-responsive::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="saving-indicator" id="savingIndicator">
+        <i class="bi bi-check-circle me-1"></i> Saved Successfully!
+    </div>
+
+    <div class="app-container">
+        <div class="app-header">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                <div class="mb-3 mb-md-0">
+                    <h1 class="app-title">
+                        <i class="bi bi-table me-2"></i>Meal Management
+                    </h1>
+                    <p class="app-subtitle">Click any cell to edit • Press Enter to save • Supports decimal values</p>
+                </div>
+                <div class="month-indicator">
+                    <i class="bi bi-calendar3 me-2"></i>
+                    <span id="currentMonthDisplay">Select Month</span>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="d-flex gap-3 justify-content-end flex-wrap">
-                    <!-- History Controls -->
-                    <div class="btn-group btn-group-sm me-2" role="group">
-                        <button class="btn btn-outline-secondary" onclick="undoAction()" id="undo-btn" disabled>
-                            <i class="bi bi-arrow-counterclockwise"></i> Undo
-                        </button>
-                        <button class="btn btn-outline-secondary" onclick="redoAction()" id="redo-btn" disabled>
-                            <i class="bi bi-arrow-clockwise"></i> Redo
-                        </button>
-                    </div>
-                    
-                    <!-- Date Controls -->
-                    <div class="d-flex gap-2">
-                        <div class="input-group input-group-sm" style="width: 140px;">
-                            <span class="input-group-text bg-transparent border-end-0">
-                                <i class="bi bi-calendar3"></i>
-                            </span>
-                            <select name="year" id="yearSelect" class="form-select border-start-0">
-                                <?php
-                                $current_year = date('Y');
-                                $selected_year = $_GET['year'] ?? $current_year;
-                                for ($y = $current_year; $y >= 2020; $y--): ?>
-                                        <option value="<?php echo $y; ?>" <?php echo $y == $selected_year ? 'selected' : ''; ?>>
-                                            <?php echo $y; ?>
-                                        </option>
-                                <?php endfor; ?>
+        </div>
+
+        <div class="control-panel">
+            <div class="row g-3 align-items-end">
+                <div class="col-lg-4 col-md-6">
+                    <label class="form-label">Select Reporting Period</label>
+                    <div class="row g-2">
+                        <div class="col-7">
+                            <select id="filter_month" class="form-select">
+                                <option value="">-- Select Month --</option>
+                                <option value="01">January</option>
+                                <option value="02">February</option>
+                                <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
                             </select>
                         </div>
-                        
-                        <div class="input-group input-group-sm" style="width: 160px;">
-                            <span class="input-group-text bg-transparent border-end-0">
-                                <i class="bi bi-filter"></i>
-                            </span>
-                            <select name="month" id="monthSelect" class="form-select border-start-0">
-                                <?php
-                                $months = [
-                                    '01' => 'January',
-                                    '02' => 'February',
-                                    '03' => 'March',
-                                    '04' => 'April',
-                                    '05' => 'May',
-                                    '06' => 'June',
-                                    '07' => 'July',
-                                    '08' => 'August',
-                                    '09' => 'September',
-                                    '10' => 'October',
-                                    '11' => 'November',
-                                    '12' => 'December'
-                                ];
-                                $selected_month = $_GET['month'] ?? date('m');
-                                foreach ($months as $num => $name): ?>
-                                        <option value="<?php echo $num; ?>" <?php echo $num == $selected_month ? 'selected' : ''; ?>>
-                                            <?php echo $name; ?>
-                                        </option>
-                                <?php endforeach; ?>
+                        <div class="col-5">
+                            <select id="filter_year" class="form-select">
+                                <option value="2026">2026</option>
+                                <option value="2025">2025</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
                             </select>
                         </div>
-                        
-                        <button type="button" class="btn btn-primary btn-sm px-3" onclick="loadMonthData()">
-                            <i class="bi bi-arrow-clockwise me-1"></i>Load
-                        </button>
-                    </div>
-                    
-                    <!-- View Toggle -->
-                    <div class="btn-group btn-group-sm" role="group">
-                        <input type="radio" class="btn-check" name="viewMode" id="gridView" autocomplete="off" checked>
-                        <label class="btn btn-outline-primary" for="gridView" onclick="switchView('grid')">
-                            <i class="bi bi-grid-3x3-gap"></i>
-                        </label>
-                        
-                        <input type="radio" class="btn-check" name="viewMode" id="tableView" autocomplete="off">
-                        <label class="btn btn-outline-primary" for="tableView" onclick="switchView('table')">
-                            <i class="bi bi-table"></i>
-                        </label>
-                        
-                        <input type="radio" class="btn-check" name="viewMode" id="analyticsView" autocomplete="off">
-                        <label class="btn btn-outline-primary" for="analyticsView" onclick="switchView('analytics')">
-                            <i class="bi bi-bar-chart"></i>
-                        </label>
                     </div>
                 </div>
-            </div>
-        </div>
-        
-        <!-- History Timeline -->
-        <div class="row mt-3">
-            <div class="col-12">
-                <div class="history-timeline">
-                    <div class="history-track">
-                        <div class="history-progress" id="history-progress"></div>
-                        <div class="history-points" id="history-points"></div>
-                    </div>
-                    <div class="d-flex justify-content-between mt-2">
-                        <small class="text-muted" id="history-info">No actions recorded</small>
-                        <small class="text-muted" id="history-count">History: 0/50</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Enhanced KPI Dashboard -->
-    <div class="row g-3 mb-4">
-        <div class="col-6 col-md-3">
-            <div class="kpi-card primary">
-                <div class="kpi-icon">
-                    <i class="bi bi-egg-fried"></i>
+                <div class="col-lg-3 col-md-6">
+                    <button class="btn btn-primary w-100 fw-bold" onclick="loadMealSheet()">
+                        <i class="bi bi-cloud-download me-2"></i>Load Data
+                    </button>
                 </div>
-                <div class="kpi-content">
-                    <div class="kpi-value" id="stats-total-meals">0</div>
-                    <div class="kpi-label">Total Meals</div>
-                    <div class="kpi-trend" id="meal-trend">0% vs prev</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="kpi-card success">
-                <div class="kpi-icon">
-                    <i class="bi bi-currency-dollar"></i>
-                </div>
-                <div class="kpi-content">
-                    <div class="kpi-value" id="stats-avg-cost">৳0.00</div>
-                    <div class="kpi-label">Avg Meal Cost</div>
-                    <div class="kpi-trend" id="cost-trend">0% vs prev</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="kpi-card info">
-                <div class="kpi-icon">
-                    <i class="bi bi-people"></i>
-                </div>
-                <div class="kpi-content">
-                    <div class="kpi-value" id="stats-total-members">0</div>
-                    <div class="kpi-label">Active Members</div>
-                    <div class="kpi-trend" id="member-trend">100% active</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="kpi-card warning">
-                <div class="kpi-icon">
-                    <i class="bi bi-cart"></i>
-                </div>
-                <div class="kpi-content">
-                    <div class="kpi-value" id="stats-total-bazar">৳0.00</div>
-                    <div class="kpi-label">Total Bazar</div>
-                    <div class="kpi-trend" id="bazar-trend">0% vs prev</div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Advanced Control Panel -->
-    <div class="glass-card mb-4">
-        <div class="row align-items-center">
-            <div class="col-md-8">
-                <div class="d-flex gap-2 flex-wrap">
-                    <button class="btn btn-sm btn-outline-primary" onclick="showQuickFillModal()">
-                        <i class="bi bi-lightning"></i> Quick Fill
-                    </button>
-                    <button class="btn btn-sm btn-outline-success" onclick="applyPattern('breakfast')">
-                        <i class="bi bi-sun"></i> Breakfast Pattern
-                    </button>
-                    <button class="btn btn-sm btn-outline-warning" onclick="applyPattern('lunch')">
-                        <i class="bi bi-sun-high"></i> Lunch Pattern
-                    </button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="applyPattern('dinner')">
-                        <i class="bi bi-moon"></i> Dinner Pattern
-                    </button>
-                    <button class="btn btn-sm btn-outline-info" onclick="showAdvancedSettings()">
-                        <i class="bi bi-gear"></i> Settings
-                    </button>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="d-flex gap-2 justify-content-end">
-                    <div class="input-group input-group-sm" style="width: 200px;">
-                        <span class="input-group-text bg-transparent">
-                            <i class="bi bi-search"></i>
-                        </span>
-                        <input type="text" class="form-control" placeholder="Search meals..." id="mealSearch">
-                    </div>
-                    <button class="btn btn-success btn-sm px-3" onclick="saveAllMeals()">
-                        <i class="bi bi-cloud-arrow-up"></i> Save
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Multi-View Container -->
-    <div id="view-container">
-        <!-- Grid View -->
-        <div id="grid-view" class="view-content active">
-            <div class="row g-3" id="grid-container">
-                <!-- Grid cards will be loaded here -->
-            </div>
-        </div>
-
-        <!-- Table View -->
-        <div id="table-view" class="view-content">
-            <div class="glass-card">
-                <div class="table-responsive" id="table-container">
-                    <!-- Table will be loaded here -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Analytics View -->
-        <div id="analytics-view" class="view-content">
-            <div class="row g-3">
-                <div class="col-12 col-lg-8">
-                    <div class="glass-card">
-                        <div class="card-header">
-                            <h6 class="mb-0">Meal Distribution Analytics</h6>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="mealChart" height="300"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-4">
-                    <div class="glass-card">
-                        <div class="card-header">
-                            <h6 class="mb-0">Member Performance</h6>
-                        </div>
-                        <div class="card-body">
-                            <div id="performance-container">
-                                <!-- Performance metrics will be loaded here -->
+                <div class="col-lg-5 col-md-12">
+                    <div
+                        class="d-flex flex-column flex-md-row justify-content-md-end gap-3 align-items-start align-items-md-center">
+                        <div class="legend-container">
+                            <span class="fw-bold me-2"><i
+                                    class="bi bi-info-circle-fill text-primary me-1"></i>Legend:</span>
+                            <div class="d-flex flex-wrap gap-2 mt-2">
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #f8f9fa;"></div>
+                                    <span>0 Meals</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #e8f5e8;"></div>
+                                    <span>1 Meal</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #e3f2fd;"></div>
+                                    <span>2 Meals</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #fff3e0;"></div>
+                                    <span>3 Meals</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #fce4ec;"></div>
+                                    <span>4 Meals</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #f3e5f5;"></div>
+                                    <span>5+ Meals</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="row mb-4 g-3">
+            <div class="col-xl-3 col-md-6">
+                <div class="card stats-card">
+                    <div class="card-body position-relative">
+                        <h5 class="card-title"><i class="bi bi-people me-2"></i>Total Members</h5>
+                        <h2 id="totalMembers" class="card-text">0</h2>
+                        <i class="bi bi-people-fill stats-icon"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card stats-card">
+                    <div class="card-body position-relative">
+                        <h5 class="card-title"><i class="bi bi-egg-fried me-2"></i>Total Meals</h5>
+                        <h2 id="totalMealsCard" class="card-text">0</h2>
+                        <i class="bi bi-egg-fried stats-icon"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card stats-card">
+                    <div class="card-body position-relative">
+                        <h5 class="card-title"><i class="bi bi-calendar-check me-2"></i>Days with Meals</h5>
+                        <h2 id="daysWithMeals" class="card-text">0</h2>
+                        <i class="bi bi-calendar-check stats-icon"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card stats-card">
+                    <div class="card-body position-relative">
+                        <h5 class="card-title"><i class="bi bi-lightning me-2"></i>Avg per Day</h5>
+                        <h2 id="avgPerDay" class="card-text">0</h2>
+                        <i class="bi bi-lightning stats-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-responsive">
+                <table class="table table-bordered mb-0" id="excelMealTable">
+                    <thead>
+                        <tr>
+                            <th class="name-col">Name</th>
+                            <th class="total-col">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="excelMealBody">
+                    </tbody>
+                    <tfoot>
+                        <tr class="summary-row">
+                            <td class="name-col">Daily Total</td>
+                            <td class="total-col" id="grandTotal">0</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
     </div>
 
-    <!-- Floating Action Button -->
-    <div class="floating-actions">
-        <button class="fab-main" onclick="toggleFAB()">
-            <i class="bi bi-plus"></i>
+    <div class="quick-actions">
+        <button class="btn floating-btn" title="Refresh Data" onclick="loadMealSheet()">
+            <i class="bi bi-arrow-clockwise"></i>
         </button>
-        <div class="fab-menu">
-            <button class="fab-item" onclick="quickFill(1)" title="Fill with 1">
-                <i class="bi bi-1-circle"></i>
-            </button>
-            <button class="fab-item" onclick="quickFill(2)" title="Fill with 2">
-                <i class="bi bi-2-circle"></i>
-            </button>
-            <button class="fab-item" onclick="clearAllMeals()" title="Clear All">
-                <i class="bi bi-x-circle"></i>
-            </button>
-            <button class="fab-item" onclick="saveAllMeals()" title="Save All">
-                <i class="bi bi-check-circle"></i>
-            </button>
-        </div>
     </div>
-</div>
 
-<!-- Quick Fill Modal -->
-<div class="modal fade" id="quickFillModal" tabindex="-1">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content glass-card">
-            <div class="modal-header">
-                <h6 class="modal-title">Quick Fill Options</h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto" id="toastTitle">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <div class="row g-2">
-                    <div class="col-6">
-                        <button class="btn btn-outline-primary w-100" onclick="fillAllWithValue(1)">Fill: 1</button>
-                    </div>
-                    <div class="col-6">
-                        <button class="btn btn-outline-success w-100" onclick="fillAllWithValue(2)">Fill: 2</button>
-                    </div>
-                    <div class="col-6">
-                        <button class="btn btn-outline-warning w-100" onclick="fillWeekendsWithValue(1)">Weekends: 1</button>
-                    </div>
-                    <div class="col-6">
-                        <button class="btn btn-outline-info w-100" onclick="fillWeekdaysWithValue(2)">Weekdays: 2</button>
-                    </div>
-                </div>
+            <div class="toast-body" id="toastMessage">
+                Hello, world! This is a toast message.
             </div>
         </div>
     </div>
-</div>
 
-<style>
-/* Advanced Glass Morphism Design */
-.glass-card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
-    box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.1),
-        0 2px 8px rgba(0, 0, 0, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.6);
-    padding: 1.5rem;
-    margin-bottom: 1rem;
-}
-
-/* KPI Cards */
-.kpi-card {
-    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 12px;
-    padding: 1.25rem;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.kpi-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
-}
-
-.kpi-card.primary {
-    --gradient-start: #4f46e5;
-    --gradient-end: #7c3aed;
-}
-
-.kpi-card.success {
-    --gradient-start: #059669;
-    --gradient-end: #10b981;
-}
-
-.kpi-card.info {
-    --gradient-start: #0369a1;
-    --gradient-end: #0ea5e9;
-}
-
-.kpi-card.warning {
-    --gradient-start: #d97706;
-    --gradient-end: #f59e0b;
-}
-
-.kpi-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-.kpi-icon {
-    font-size: 1.5rem;
-    margin-bottom: 0.75rem;
-    opacity: 0.8;
-}
-
-.kpi-value {
-    font-size: 1.75rem;
-    font-weight: 700;
-    line-height: 1;
-    margin-bottom: 0.25rem;
-}
-
-.kpi-label {
-    font-size: 0.875rem;
-    color: #6b7280;
-    margin-bottom: 0.25rem;
-}
-
-.kpi-trend {
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
-/* Header Icon */
-.header-icon {
-    width: 48px;
-    height: 48px;
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 1rem;
-    color: white;
-    font-size: 1.5rem;
-}
-
-/* Text Gradient */
-.text-gradient {
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-/* View Management */
-.view-content {
-    display: none;
-}
-
-.view-content.active {
-    display: block;
-    animation: fadeInUp 0.4s ease-out;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Grid View Styles */
-.meal-grid-card {
-    background: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 12px;
-    padding: 1rem;
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-}
-
-.meal-grid-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-}
-
-.meal-input-advanced {
-    width: 60px;
-    border: 2px solid #e5e7eb;
-    border-radius: 8px;
-    text-align: center;
-    font-weight: 600;
-    transition: all 0.2s ease;
-    background: rgba(255, 255, 255, 0.9);
-}
-
-.meal-input-advanced:focus {
-    border-color: #4f46e5;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-    background: white;
-}
-
-/* Floating Action Button */
-.floating-actions {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    z-index: 1000;
-}
-
-.fab-main {
-    width: 56px;
-    height: 56px;
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
-    border: none;
-    border-radius: 50%;
-    color: white;
-    font-size: 1.5rem;
-    box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.fab-main:hover {
-    transform: scale(1.1);
-    box-shadow: 0 12px 32px rgba(79, 70, 229, 0.4);
-}
-
-.fab-menu {
-    position: absolute;
-    bottom: 70px;
-    right: 0;
-    display: none;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.fab-menu.show {
-    display: flex;
-    animation: slideUp 0.3s ease;
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.fab-item {
-    width: 44px;
-    height: 44px;
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 50%;
-    color: #4f46e5;
-    font-size: 1.25rem;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-}
-
-.fab-item:hover {
-    background: #4f46e5;
-    color: white;
-    transform: scale(1.1);
-}
-
-/* History Timeline Styles */
-.history-timeline {
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 10px;
-    padding: 1rem;
-    backdrop-filter: blur(10px);
-}
-
-.history-track {
-    height: 6px;
-    background: #e5e7eb;
-    border-radius: 3px;
-    position: relative;
-    margin: 0.5rem 0;
-}
-
-.history-progress {
-    height: 100%;
-    background: linear-gradient(90deg, #4f46e5, #7c3aed);
-    border-radius: 3px;
-    width: 0%;
-    transition: width 0.3s ease;
-}
-
-.history-points {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    transform: translateY(-50%);
-    display: flex;
-    justify-content: space-between;
-}
-
-.history-point {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: #9ca3af;
-    border: 2px solid white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.history-point.active {
-    background: #4f46e5;
-    transform: scale(1.2);
-}
-
-.history-point.past {
-    background: #10b981;
-}
-
-/* Keyboard Shortcut Hints */
-.keyboard-shortcut {
-    font-size: 0.75rem;
-    color: #6b7280;
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
-    padding: 0.125rem 0.375rem;
-    background: rgba(255, 255, 255, 0.5);
-}
-
-/* Enhanced button states */
-.btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-/* Animation for history actions */
-@keyframes historyFlash {
-    0% { background-color: rgba(79, 70, 229, 0.1); }
-    100% { background-color: transparent; }
-}
-
-.history-flash {
-    animation: historyFlash 0.6s ease;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .glass-card {
-        padding: 1rem;
-        margin-bottom: 0.75rem;
-    }
-    
-    .kpi-card {
-        padding: 1rem;
-    }
-    
-    .kpi-value {
-        font-size: 1.5rem;
-    }
-    
-    .header-icon {
-        width: 40px;
-        height: 40px;
-        font-size: 1.25rem;
-    }
-    
-    .floating-actions {
-        bottom: 1rem;
-        right: 1rem;
-    }
-    
-    .meal-input-advanced {
-        width: 50px;
-        font-size: 0.8rem;
-    }
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-    .glass-card {
-        background: rgba(30, 30, 30, 0.8);
-        border-color: rgba(255, 255, 255, 0.1);
-    }
-    
-    .kpi-card {
-        background: rgba(40, 40, 40, 0.8);
-    }
-}
-</style>
-
-<script>
-// Enhanced History Management System
-class MealHistory {
-    constructor(maxSize = 50) {
-        this.history = [];
-        this.currentIndex = -1;
-        this.maxSize = maxSize;
-        this.batchTimeout = null;
-        this.batchActions = [];
-    }
-
-    // Add action to history
-    addAction(action) {
-        // Clear redo history if we're not at the end
-        if (this.currentIndex < this.history.length - 1) {
-            this.history = this.history.slice(0, this.currentIndex + 1);
-        }
-
-        // Add to batch for grouped actions
-        this.batchActions.push(action);
-        
-        clearTimeout(this.batchTimeout);
-        this.batchTimeout = setTimeout(() => {
-            this.commitBatch();
-        }, 1000);
-    }
-
-    // Commit batched actions
-    commitBatch() {
-        if (this.batchActions.length === 0) return;
-
-        const batch = {
-            type: 'batch',
-            actions: [...this.batchActions],
-            timestamp: new Date(),
-            description: this.batchActions.length === 1 ? 
-                `${this.batchActions[0].memberName}: ${this.batchActions[0].oldValue} → ${this.batchActions[0].newValue}` :
-                `${this.batchActions.length} changes`
-        };
-
-        this.history.push(batch);
-        
-        // Limit history size
-        if (this.history.length > this.maxSize) {
-            this.history.shift();
-        }
-
-        this.currentIndex = this.history.length - 1;
-        this.batchActions = [];
-        this.updateUI();
-    }
-
-    // Undo last action
-    undo() {
-        if (this.currentIndex < 0) return null;
-
-        const action = this.history[this.currentIndex];
-        this.currentIndex--;
-        this.updateUI();
-        return action;
-    }
-
-    // Redo next action
-    redo() {
-        if (this.currentIndex >= this.history.length - 1) return null;
-
-        this.currentIndex++;
-        const action = this.history[this.currentIndex];
-        this.updateUI();
-        return action;
-    }
-
-    // Clear history
-    clear() {
-        this.history = [];
-        this.currentIndex = -1;
-        this.batchActions = [];
-        this.updateUI();
-    }
-
-    // Update UI elements
-    updateUI() {
-        const undoBtn = document.getElementById('undo-btn');
-        const redoBtn = document.getElementById('redo-btn');
-        const historyStatus = document.getElementById('history-status');
-        const historyInfo = document.getElementById('history-info');
-        const historyCount = document.getElementById('history-count');
-        const historyProgress = document.getElementById('history-progress');
-        const historyPoints = document.getElementById('history-points');
-
-        // Update button states
-        undoBtn.disabled = this.currentIndex < 0;
-        redoBtn.disabled = this.currentIndex >= this.history.length - 1;
-
-        // Update status
-        const canUndo = this.currentIndex >= 0;
-        const canRedo = this.currentIndex < this.history.length - 1;
-        
-        if (canUndo || canRedo) {
-            historyStatus.textContent = `History: ${this.currentIndex + 1}/${this.history.length}`;
-            historyStatus.className = 'badge bg-warning ms-2';
-        } else {
-            historyStatus.textContent = 'Ready';
-            historyStatus.className = 'badge bg-info ms-2';
-        }
-
-        // Update progress
-        const progress = this.history.length > 0 ? 
-            ((this.currentIndex + 1) / this.history.length) * 100 : 0;
-        historyProgress.style.width = `${progress}%`;
-
-        // Update info
-        if (this.history.length === 0) {
-            historyInfo.textContent = 'No actions recorded';
-        } else {
-            const lastAction = this.history[this.currentIndex];
-            historyInfo.textContent = `Last: ${lastAction.description}`;
-        }
-
-        historyCount.textContent = `History: ${this.history.length}/${this.maxSize}`;
-
-        // Update timeline points
-        this.updateTimelinePoints();
-    }
-
-    // Update timeline visualization
-    updateTimelinePoints() {
-        const historyPoints = document.getElementById('history-points');
-        const pointsCount = Math.min(10, this.history.length);
-        
-        let pointsHTML = '';
-        for (let i = 0; i < pointsCount; i++) {
-            let pointClass = 'history-point';
-            if (i === this.currentIndex) {
-                pointClass += ' active';
-            } else if (i < this.currentIndex) {
-                pointClass += ' past';
-            }
-            
-            pointsHTML += `<div class="${pointClass}" onclick="jumpToHistory(${i})" 
-                            title="${this.history[i]?.description || 'Action ' + (i + 1)}"></div>`;
-        }
-        
-        historyPoints.innerHTML = pointsHTML;
-    }
-
-    // Get current state info
-    getState() {
-        return {
-            canUndo: this.currentIndex >= 0,
-            canRedo: this.currentIndex < this.history.length - 1,
-            historySize: this.history.length,
-            currentPosition: this.currentIndex + 1
-        };
-    }
-}
-
-// Global variables
-let currentMonthData = {};
-let currentView = 'grid';
-let autoSaveTimeout = null;
-let mealChart = null;
-const mealHistory = new MealHistory(50);
-
-// Enhanced meal update with history tracking
-function updateMeal(input) {
-    const memberId = input.dataset.member;
-    const date = input.dataset.date;
-    const newValue = parseFloat(input.value) || 0;
-    const oldValue = parseFloat(input.getAttribute('data-old-value') || input.value) || 0;
-    
-    // Store old value for history
-    if (!input.hasAttribute('data-old-value')) {
-        input.setAttribute('data-old-value', oldValue);
-    }
-
-    // Only record if value actually changed
-    if (newValue !== oldValue) {
-        const memberName = getMemberName(memberId);
-        
-        // Create history action
-        const action = {
-            type: 'meal_update',
-            memberId: memberId,
-            memberName: memberName,
-            date: date,
-            oldValue: oldValue,
-            newValue: newValue,
-            input: input,
-            timestamp: new Date()
-        };
-
-        // Add to history
-        mealHistory.addAction(action);
-
-        // Update old value reference
-        input.setAttribute('data-old-value', newValue);
-    }
-
-    // Update local data
-    if (!currentMonthData.meals[memberId]) {
-        currentMonthData.meals[memberId] = {};
-    }
-    currentMonthData.meals[memberId][date] = newValue;
-
-    // Update all calculations
-    updateAllCalculations();
-
-    // Auto-save
-    clearTimeout(autoSaveTimeout);
-    autoSaveTimeout = setTimeout(() => {
-        saveMeal(memberId, date, newValue);
-    }, 1000);
-
-    console.log('📊 Meal updated:', { memberId, date, newValue, oldValue });
-}
-
-// Undo functionality
-function undoAction() {
-    const action = mealHistory.undo();
-    if (!action) return;
-
-    if (action.type === 'batch') {
-        // Reverse all actions in the batch
-        action.actions.reverse().forEach(singleAction => {
-            revertMealChange(singleAction);
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // All JavaScript functionality remains exactly the same
+        let members = [];
+        let currentMonth = '';
+        let currentYear = new Date().getFullYear().toString();
+        let daysInMonth = [];
+        let mealData = {};
+        let currentEditingCell = null;
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeApp();
         });
-    } else {
-        revertMealChange(action);
-    }
 
-    showNotification(`↩️ Undo: ${action.description}`, 'info');
-    flashHistoryEffect();
-}
-
-// Redo functionality
-function redoAction() {
-    const action = mealHistory.redo();
-    if (!action) return;
-
-    if (action.type === 'batch') {
-        // Re-apply all actions in the batch
-        action.actions.forEach(singleAction => {
-            applyMealChange(singleAction);
-        });
-    } else {
-        applyMealChange(action);
-    }
-
-    showNotification(`↪️ Redo: ${action.description}`, 'info');
-    flashHistoryEffect();
-}
-
-// Revert a meal change (for undo)
-function revertMealChange(action) {
-    const input = findMealInput(action.memberId, action.date);
-    if (input) {
-        input.value = action.oldValue;
-        input.setAttribute('data-old-value', action.oldValue);
-        
-        // Update local data
-        if (!currentMonthData.meals[action.memberId]) {
-            currentMonthData.meals[action.memberId] = {};
+        async function initializeApp() {
+            await loadMembers();
+            setupEventListeners();
+            setDefaultDate();
         }
-        currentMonthData.meals[action.memberId][action.date] = action.oldValue;
-        
-        // Flash effect
-        input.classList.add('history-flash');
-        setTimeout(() => input.classList.remove('history-flash'), 600);
-    }
-    
-    updateAllCalculations();
-}
 
-// Apply a meal change (for redo)
-function applyMealChange(action) {
-    const input = findMealInput(action.memberId, action.date);
-    if (input) {
-        input.value = action.newValue;
-        input.setAttribute('data-old-value', action.newValue);
-        
-        // Update local data
-        if (!currentMonthData.meals[action.memberId]) {
-            currentMonthData.meals[action.memberId] = {};
-        }
-        currentMonthData.meals[action.memberId][action.date] = action.newValue;
-        
-        // Flash effect
-        input.classList.add('history-flash');
-        setTimeout(() => input.classList.remove('history-flash'), 600);
-    }
-    
-    updateAllCalculations();
-}
-
-// Find meal input element
-function findMealInput(memberId, date) {
-    const selector = `input[data-member="${memberId}"][data-date="${date}"]`;
-    return document.querySelector(selector);
-}
-
-// Get member name from ID
-function getMemberName(memberId) {
-    if (!currentMonthData.members) return 'Unknown';
-    const member = currentMonthData.members.find(m => m.id == memberId);
-    return member ? member.name : 'Unknown';
-}
-
-// Jump to specific history point
-function jumpToHistory(index) {
-    const currentIndex = mealHistory.currentIndex;
-    
-    if (index < currentIndex) {
-        // Need to undo to reach this point
-        const steps = currentIndex - index;
-        for (let i = 0; i < steps; i++) {
-            undoAction();
-        }
-    } else if (index > currentIndex) {
-        // Need to redo to reach this point
-        const steps = index - currentIndex;
-        for (let i = 0; i < steps; i++) {
-            redoAction();
-        }
-    }
-}
-
-// Flash effect for history actions
-function flashHistoryEffect() {
-    const container = document.getElementById('view-container');
-    container.classList.add('history-flash');
-    setTimeout(() => container.classList.remove('history-flash'), 300);
-}
-
-// Keyboard shortcut handler
-function setupKeyboardShortcuts() {
-    document.addEventListener('keydown', function(e) {
-        // Ctrl+Z or Cmd+Z for Undo
-        if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
-            e.preventDefault();
-            if (mealHistory.getState().canUndo) {
-                undoAction();
-            }
-        }
-        
-        // Ctrl+Y or Ctrl+Shift+Z for Redo
-        if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
-            e.preventDefault();
-            if (mealHistory.getState().canRedo) {
-                redoAction();
-            }
-        }
-        
-        // Escape to clear selection
-        if (e.key === 'Escape') {
-            document.activeElement.blur();
-        }
-    });
-
-    // Show keyboard shortcuts help
-    document.addEventListener('keydown', function(e) {
-        if ((e.ctrlKey || e.metaKey) && e.key === '/') {
-            e.preventDefault();
-            showKeyboardShortcuts();
-        }
-    });
-}
-
-// Show keyboard shortcuts modal
-function showKeyboardShortcuts() {
-    const shortcuts = [
-        { key: 'Ctrl+Z', action: 'Undo last action' },
-        { key: 'Ctrl+Y', action: 'Redo last action' },
-        { key: 'Ctrl+Shift+Z', action: 'Redo last action' },
-        { key: 'Escape', action: 'Clear input focus' },
-        { key: 'Ctrl+/', action: 'Show this help' }
-    ];
-
-    let helpHTML = `
-        <div class="glass-card">
-            <div class="card-header">
-                <h6 class="mb-0">Keyboard Shortcuts</h6>
-            </div>
-            <div class="card-body">
-                <div class="row g-2">
-    `;
-
-    shortcuts.forEach(shortcut => {
-        helpHTML += `
-            <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center p-2 border-bottom">
-                    <kbd class="keyboard-shortcut">${shortcut.key}</kbd>
-                    <span class="text-muted">${shortcut.action}</span>
-                </div>
-            </div>
-        `;
-    });
-
-    helpHTML += `
-                </div>
-            </div>
-        </div>
-    `;
-
-    // Create and show modal
-    const modal = document.createElement('div');
-    modal.className = 'modal fade show d-block';
-    modal.style.background = 'rgba(0,0,0,0.5)';
-    modal.innerHTML = `
-        <div class="modal-dialog modal-sm">
-            ${helpHTML}
-            <div class="text-center mt-3">
-                <button class="btn btn-sm btn-primary" onclick="this.closest('.modal').remove()">Close</button>
-            </div>
-        </div>
-    `;
-
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            modal.remove();
-        }
-    });
-
-    document.body.appendChild(modal);
-}
-
-// View management
-function switchView(view) {
-    currentView = view;
-    
-    // Hide all views
-    document.querySelectorAll('.view-content').forEach(view => {
-        view.classList.remove('active');
-    });
-    
-    // Show selected view
-    document.getElementById(`${view}-view`).classList.add('active');
-    
-    // Re-render based on view
-    if (currentMonthData.members) {
-        switch(view) {
-            case 'grid':
-                renderGridView(currentMonthData);
-                break;
-            case 'table':
-                renderTableView(currentMonthData);
-                break;
-            case 'analytics':
-                renderAnalyticsView(currentMonthData);
-                break;
-        }
-    }
-}
-
-// Enhanced load function
-function loadMonthData() {
-    const year = document.getElementById('yearSelect').value;
-    const month = document.getElementById('monthSelect').value;
-    
-    showLoading();
-    
-    fetch(`ajax/load_meals.php?year=${year}&month=${month}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                currentMonthData = data;
-                updateAllViews(data);
-                console.log('🚀 Advanced meal data loaded:', data);
-            } else {
-                showNotification('Error loading data: ' + data.error, 'error');
-            }
-            hideLoading();
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showNotification('Error loading meal data', 'error');
-            hideLoading();
-        });
-}
-
-// Update all views
-function updateAllViews(data) {
-    updateStats(data);
-    renderGridView(data);
-    renderTableView(data);
-    renderAnalyticsView(data);
-}
-
-// Enhanced grid view renderer
-function renderGridView(data) {
-    const container = document.getElementById('grid-container');
-    
-    let html = '';
-    
-    data.members.forEach((member, memberIndex) => {
-        let memberTotal = 0;
-        const weeks = chunkArray(data.dates, 7);
-        
-        html += `
-            <div class="col-12 col-md-6 col-xl-4">
-                <div class="meal-grid-card">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="mb-0 fw-bold">${member.name}</h6>
-                        <span class="badge bg-primary" id="grid-member-total-${member.id}">0</span>
-                    </div>
-                    <div class="row g-1">`;
-        
-        weeks.forEach((week, weekIndex) => {
-            html += `<div class="col-12">`;
-            html += `<div class="row g-1 mb-2">`;
-            
-            week.forEach(date => {
-                const dateObj = new Date(date);
-                const meal_count = data.meals[member.id]?.[date] || 0;
-                memberTotal += parseFloat(meal_count);
-                const is_weekend = (dateObj.getDay() === 0 || dateObj.getDay() === 6);
-                const dayClass = is_weekend ? 'bg-warning bg-opacity-25' : '';
-                
-                html += `
-                    <div class="col">
-                        <div class="text-center ${dayClass} p-1 rounded">
-                            <div class="small text-muted">${dateObj.toLocaleDateString('en', {weekday: 'narrow'})}</div>
-                            <div class="small fw-bold mb-1">${dateObj.getDate()}</div>
-                            <input type="number" 
-                                   data-member="${member.id}" 
-                                   data-date="${date}"
-                                   class="form-control form-control-sm meal-input-advanced" 
-                                   value="${meal_count}"
-                                   min="0" 
-                                   max="10"
-                                   step="0.5"
-                                   onchange="updateMeal(this)"
-                                   onfocus="this.select()">
-                        </div>
-                    </div>`;
+        function setupEventListeners() {
+            // Escape key to cancel editing
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && currentEditingCell) {
+                    cancelEditing();
+                }
             });
-            
-            html += `</div></div>`;
-        });
-        
-        html += `
-                    </div>
-                    <div class="mt-2 pt-2 border-top">
-                        <small class="text-muted">Avg: <strong>${(memberTotal / data.dates.length).toFixed(1)}</strong> meals/day</small>
-                    </div>
-                </div>
-            </div>`;
-    });
-    
-    container.innerHTML = html;
-    updateGridMemberTotals();
-}
+        }
 
-// Enhanced table view renderer
-function renderTableView(data) {
-    const container = document.getElementById('table-container');
-    
-    let html = `
-        <table class="table table-hover align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th class="fw-semibold">Date</th>`;
-    
-    data.members.forEach(member => {
-        html += `<th class="text-center fw-semibold">${member.name}</th>`;
-    });
-    
-    html += `
-                    <th class="text-center fw-semibold">Daily Total</th>
-                </tr>
-            </thead>
-            <tbody>`;
-    
-    data.dates.forEach(date => {
-        const dateObj = new Date(date);
-        const is_weekend = (dateObj.getDay() === 0 || dateObj.getDay() === 6);
-        const rowClass = is_weekend ? 'table-warning' : '';
-        let dailyTotal = 0;
-        
-        html += `<tr class="${rowClass}">`;
-        html += `<td class="fw-semibold">
-                    <div class="small">${dateObj.toLocaleDateString('en', {weekday: 'short'})}</div>
-                    <div class="fw-bold">${dateObj.getDate()}</div>
-                 </td>`;
-        
-        data.members.forEach(member => {
-            const meal_count = data.meals[member.id]?.[date] || 0;
-            dailyTotal += parseFloat(meal_count);
-            
-            html += `
-                <td class="text-center">
-                    <input type="number" 
-                           data-member="${member.id}" 
-                           data-date="${date}"
-                           class="form-control form-control-sm meal-input-advanced" 
-                           value="${meal_count}"
-                           min="0" 
-                           max="10"
-                           step="0.5"
-                           style="width: 70px; margin: 0 auto;"
-                           onchange="updateMeal(this)"
-                           onfocus="this.select()">
-                </td>`;
-        });
-        
-        html += `<td class="text-center fw-bold">${dailyTotal.toFixed(1)}</td>`;
-        html += `</tr>`;
-    });
-    
-    html += `</tbody></table>`;
-    container.innerHTML = html;
-}
+        function setDefaultDate() {
+            const now = new Date();
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            document.getElementById('filter_month').value = month;
+            document.getElementById('filter_year').value = currentYear;
+        }
 
-// Analytics view renderer
-function renderAnalyticsView(data) {
-    renderMealChart(data);
-    renderPerformanceMetrics(data);
-}
+        /* LOAD MEMBERS - ORIGINAL FETCH */
+        async function loadMembers() {
+            try {
+                const response = await fetch("process/meal_actions.php", {
+                    method: "POST",
+                    body: new URLSearchParams({ action: "load_members" })
+                });
+                const data = await response.json();
 
-// Chart.js implementation
-function renderMealChart(data) {
-    const ctx = document.getElementById('mealChart').getContext('2d');
-    
-    if (mealChart) {
-        mealChart.destroy();
-    }
-    
-    const memberTotals = data.members.map(member => {
-        let total = 0;
-        data.dates.forEach(date => {
-            total += parseFloat(data.meals[member.id]?.[date] || 0);
-        });
-        return total;
-    });
-    
-    mealChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: data.members.map(m => m.name),
-            datasets: [{
-                label: 'Total Meals',
-                data: memberTotals,
-                backgroundColor: 'rgba(79, 70, 229, 0.6)',
-                borderColor: 'rgba(79, 70, 229, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: 'Meal Distribution by Member'
+                if (data.status === 'success') {
+                    members = data.members;
+                    updateMemberCount();
+                } else {
+                    throw new Error(data.message);
                 }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true
+            } catch (error) {
+                showToast('Error', 'Failed to load members: ' + error.message, 'error');
+            }
+        }
+
+        function updateMemberCount() {
+            const totalMembersElement = document.getElementById('totalMembers');
+            if (totalMembersElement) {
+                totalMembersElement.textContent = members.length;
+            }
+        }
+
+        /* LOAD MEAL SHEET - ORIGINAL FETCH */
+        async function loadMealSheet() {
+            const month = document.getElementById("filter_month").value;
+            const year = document.getElementById("filter_year").value;
+
+            if (!month) {
+                showToast('Warning', 'Please select a month first!', 'warning');
+                return;
+            }
+
+            currentMonth = month;
+            currentYear = year;
+
+            try {
+                updateMonthDisplay(month, year);
+                showToast('Loading', 'Loading meal data...', 'info');
+
+                const response = await fetch("process/meal_actions.php", {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        action: "load_meals_month",
+                        month: month,
+                        year: year
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    processMealData(data.meals);
+                    renderExcelView();
+                    showToast('Success', `Loaded data for ${getMonthName(month)} ${year}`, 'success');
+                } else {
+                    throw new Error(data.message);
                 }
+            } catch (error) {
+                showToast('Error', 'Failed to load meal data: ' + error.message, 'error');
             }
         }
-    });
-}
 
-// Performance metrics
-function renderPerformanceMetrics(data) {
-    const container = document.getElementById('performance-container');
-    
-    let html = '';
-    
-    data.members.forEach((member, index) => {
-        let total = 0;
-        let daysWithMeals = 0;
-        
-        data.dates.forEach(date => {
-            const count = parseFloat(data.meals[member.id]?.[date] || 0);
-            total += count;
-            if (count > 0) daysWithMeals++;
-        });
-        
-        const avgPerDay = (total / data.dates.length).toFixed(1);
-        const percentage = data.total_meals > 0 ? ((total / data.total_meals) * 100).toFixed(1) : '0';
-        const efficiency = (daysWithMeals / data.dates.length * 100).toFixed(1);
-        
-        html += `
-            <div class="d-flex justify-content-between align-items-center mb-3 p-2 border-bottom">
-                <div>
-                    <div class="fw-bold">${member.name}</div>
-                    <small class="text-muted">${avgPerDay} avg/day</small>
-                </div>
-                <div class="text-end">
-                    <div class="fw-bold text-primary">${total.toFixed(1)}</div>
-                    <small class="text-muted">${efficiency}% active</small>
-                </div>
-            </div>`;
-    });
-    
-    container.innerHTML = html;
-}
+        function processMealData(meals) {
+            // Initialize data structure
+            mealData = {};
+            members.forEach(member => {
+                mealData[member.id] = {
+                    name: member.name,
+                    meals: {},
+                    total: 0,
+                    mealEntries: {} // Store actual meal entry IDs
+                };
+            });
 
-// Enhanced calculations
-function updateAllCalculations() {
-    updateGridMemberTotals();
-    updateStats(currentMonthData);
-    
-    if (currentView === 'analytics') {
-        renderAnalyticsView(currentMonthData);
-    }
-}
+            // Process meals
+            let totalMeals = 0;
+            let daysWithMeals = new Set();
 
-// Update grid member totals
-function updateGridMemberTotals() {
-    if (!currentMonthData.members) return;
-    
-    currentMonthData.members.forEach(member => {
-        let memberTotal = 0;
-        currentMonthData.dates.forEach(date => {
-            const count = parseFloat(currentMonthData.meals[member.id]?.[date] || 0);
-            memberTotal += count;
-        });
-        
-        const totalElement = document.getElementById(`grid-member-total-${member.id}`);
-        if (totalElement) {
-            totalElement.textContent = memberTotal.toFixed(1);
+            meals.forEach(meal => {
+                const mealDate = new Date(meal.meal_date);
+                const day = mealDate.getDate();
+
+                if (!mealData[meal.member_id]) {
+                    // Fallback in case member wasn't loaded (using real_name/member_name from meal record)
+                    mealData[meal.member_id] = {
+                        name: meal.real_name || meal.member_name || `Member ${meal.member_id}`,
+                        meals: {},
+                        total: 0,
+                        mealEntries: {}
+                    };
+                }
+
+                const mealCount = parseFloat(meal.meal_count) || 0;
+                mealData[meal.member_id].meals[day] = mealCount;
+                mealData[meal.member_id].mealEntries[day] = meal.id; // Store the meal ID
+                mealData[meal.member_id].total += mealCount;
+
+                totalMeals += mealCount;
+                if (mealCount > 0) {
+                    daysWithMeals.add(day);
+                }
+            });
+
+            // Generate days array for the month
+            generateDaysInMonth(parseInt(currentMonth), parseInt(currentYear));
+
+            // Update statistics
+            updateStatistics(totalMeals, daysWithMeals.size);
         }
-    });
-}
 
-// Update stats display
-function updateStats(data) {
-    document.getElementById('stats-total-meals').textContent = parseFloat(data.total_meals).toFixed(1);
-    document.getElementById('stats-avg-cost').textContent = '৳' + parseFloat(data.avg_meal_cost).toFixed(2);
-    document.getElementById('stats-total-members').textContent = data.members.length;
-    document.getElementById('stats-total-bazar').textContent = '৳' + parseFloat(data.total_bazar).toFixed(2);
-    document.getElementById('current-month-display').textContent = `Tracking ${data.month_name} ${data.year}`;
-    
-    const displayGrandTotal = document.getElementById('display-grand-total');
-    if (displayGrandTotal) {
-        displayGrandTotal.textContent = parseFloat(data.total_meals).toFixed(1);
-    }
-    
-    console.log('📈 Stats Updated:', {
-        total_meals: data.total_meals,
-        avg_meal_cost: data.avg_meal_cost,
-        total_members: data.members.length,
-        total_bazar: data.total_bazar
-    });
-}
+        function generateDaysInMonth(month, year) {
+            daysInMonth = [];
+            const daysCount = new Date(year, month, 0).getDate();
+            const today = new Date();
 
-// Save single meal via AJAX
-function saveMeal(memberId, date, count) {
-    const formData = new FormData();
-    formData.append('action', 'save_single_meal');
-    formData.append('member_id', memberId);
-    formData.append('meal_date', date);
-    formData.append('meal_count', count);
-    
-    fetch('process/actions.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            console.log('✅ Meal saved:', { memberId, date, count });
-        } else {
-            console.error('❌ Save failed:', data.error);
-        }
-    })
-    .catch(error => {
-        console.error('❌ Save error:', error);
-    });
-}
-
-// Save all meals
-function saveAllMeals() {
-    const meals = {};
-    const desktopInputs = document.querySelectorAll('.meal-input-advanced');
-    const inputs = [...desktopInputs];
-    
-    inputs.forEach(input => {
-        const memberId = input.dataset.member;
-        const date = input.dataset.date;
-        const count = parseFloat(input.value) || 0;
-        
-        if (!meals[memberId]) meals[memberId] = {};
-        meals[memberId][date] = count;
-    });
-    
-    const formData = new FormData();
-    formData.append('action', 'save_all_meals');
-    formData.append('meals', JSON.stringify(meals));
-    formData.append('year', document.getElementById('yearSelect').value);
-    formData.append('month', document.getElementById('monthSelect').value);
-    
-    showLoading();
-    
-    fetch('process/actions.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        hideLoading();
-        if (data.success) {
-            showNotification('✅ All meals saved successfully!', 'success');
-            console.log('✅ All meals saved:', data);
-        } else {
-            showNotification('❌ Error saving meals: ' + data.error, 'error');
-        }
-    })
-    .catch(error => {
-        hideLoading();
-        console.error('❌ Save error:', error);
-        showNotification('Error saving meals', 'error');
-    });
-}
-
-// Quick action functions
-function fillAllWithValue(value) {
-    if (confirm(`Fill all meal counts with ${value}?`)) {
-        const inputs = document.querySelectorAll('.meal-input-advanced');
-        
-        inputs.forEach(input => {
-            input.value = value;
-            updateMeal(input);
-        });
-        showNotification(`✅ All meals filled with ${value}`, 'success');
-    }
-}
-
-function fillWeekendsWithValue(value) {
-    if (confirm(`Fill only weekend meal counts with ${value}?`)) {
-        const inputs = document.querySelectorAll('.meal-input-advanced');
-        let updatedCount = 0;
-        
-        inputs.forEach(input => {
-            const date = input.dataset.date;
-            const dayOfWeek = new Date(date).getDay();
-            if (dayOfWeek === 0 || dayOfWeek === 6) {
-                input.value = value;
-                updateMeal(input);
-                updatedCount++;
+            for (let day = 1; day <= daysCount; day++) {
+                const date = new Date(year, month - 1, day);
+                daysInMonth.push({
+                    day: day,
+                    date: date,
+                    isWeekend: date.getDay() === 0 || date.getDay() === 6,
+                    isToday: false // Today indicator removed
+                });
             }
-        });
-        
-        showNotification(`✅ ${updatedCount} weekend meals filled with ${value}`, 'success');
-    }
-}
-
-function fillWeekdaysWithValue(value) {
-    if (confirm(`Fill only weekday meal counts with ${value}?`)) {
-        const inputs = document.querySelectorAll('.meal-input-advanced');
-        let updatedCount = 0;
-        
-        inputs.forEach(input => {
-            const date = input.dataset.date;
-            const dayOfWeek = new Date(date).getDay();
-            if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-                input.value = value;
-                updateMeal(input);
-                updatedCount++;
-            }
-        });
-        
-        showNotification(`✅ ${updatedCount} weekday meals filled with ${value}`, 'success');
-    }
-}
-
-function clearAllMeals() {
-    if (confirm('Clear all meal counts?')) {
-        const inputs = document.querySelectorAll('.meal-input-advanced');
-        
-        inputs.forEach(input => {
-            input.value = 0;
-            updateMeal(input);
-        });
-        showNotification('✅ All meals cleared', 'success');
-    }
-}
-
-// Pattern applications
-function applyPattern(type) {
-    const patterns = {
-        breakfast: { weekdays: 1, weekends: 1 },
-        lunch: { weekdays: 2, weekends: 2 },
-        dinner: { weekdays: 1, weekends: 2 }
-    };
-    
-    const pattern = patterns[type];
-    const inputs = document.querySelectorAll('.meal-input-advanced');
-    
-    inputs.forEach(input => {
-        const date = input.dataset.date;
-        const dayOfWeek = new Date(date).getDay();
-        const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
-        input.value = isWeekend ? pattern.weekends : pattern.weekdays;
-        updateMeal(input);
-    });
-    
-    showNotification(`✅ Applied ${type} pattern`, 'success');
-}
-
-// Floating Action Button
-function toggleFAB() {
-    const fabMenu = document.querySelector('.fab-menu');
-    fabMenu.classList.toggle('show');
-}
-
-function quickFill(value) {
-    fillAllWithValue(value);
-    toggleFAB();
-}
-
-// Modal functions
-function showQuickFillModal() {
-    const modal = new bootstrap.Modal(document.getElementById('quickFillModal'));
-    modal.show();
-}
-
-function showAdvancedSettings() {
-    showNotification('⚙️ Advanced settings coming soon!', 'info');
-}
-
-// Search functionality
-function initializeSearch() {
-    const searchInput = document.getElementById('mealSearch');
-    searchInput.addEventListener('input', function(e) {
-        const searchTerm = e.target.value.toLowerCase();
-        // Implement search logic here
-    });
-}
-
-// View toggle initialization
-function initializeViewToggle() {
-    const viewRadios = document.querySelectorAll('input[name="viewMode"]');
-    viewRadios.forEach(radio => {
-        radio.addEventListener('change', function() {
-            switchView(this.id.replace('View', ''));
-        });
-    });
-}
-
-// Utility functions
-function chunkArray(array, size) {
-    const chunks = [];
-    for (let i = 0; i < array.length; i += size) {
-        chunks.push(array.slice(i, i + size));
-    }
-    return chunks;
-}
-
-// Notification system
-function showNotification(message, type = 'info') {
-    // Remove existing notifications
-    document.querySelectorAll('.alert.position-fixed').forEach(alert => alert.remove());
-    
-    const notification = document.createElement('div');
-    notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
-    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 250px;';
-    notification.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.remove();
         }
-    }, 3000);
-}
 
-// Utility functions
-function showLoading() {
-    document.getElementById('loadingOverlay').style.display = 'flex';
-}
+        function renderExcelView() {
+            const tableHead = document.querySelector('#excelMealTable thead tr');
+            const tableBody = document.querySelector('#excelMealTable tbody');
+            const tableFoot = document.querySelector('#excelMealTable tfoot tr');
 
-function hideLoading() {
-    document.getElementById('loadingOverlay').style.display = 'none';
-}
-
-// Enhanced initialization
-document.addEventListener('DOMContentLoaded', function() {
-    loadMonthData();
-    initializeSearch();
-    initializeViewToggle();
-    setupKeyboardShortcuts();
-    
-    // Add keyboard shortcut hint to header
-    const headerSubtitle = document.getElementById('current-month-display');
-    if (headerSubtitle) {
-        const hint = document.createElement('span');
-        hint.className = 'keyboard-shortcut ms-2';
-        hint.textContent = 'Ctrl+/ for shortcuts';
-        hint.style.fontSize = '0.7rem';
-        headerSubtitle.appendChild(hint);
-    }
-});
-
-// Clear history when loading new month
-function loadMonthData() {
-    mealHistory.clear();
-    
-    const year = document.getElementById('yearSelect').value;
-    const month = document.getElementById('monthSelect').value;
-    
-    showLoading();
-    
-    fetch(`ajax/load_meals.php?year=${year}&month=${month}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                currentMonthData = data;
-                updateAllViews(data);
-                console.log('🚀 Advanced meal data loaded:', data);
-            } else {
-                showNotification('Error loading data: ' + data.error, 'error');
+            if (!tableHead || !tableBody || !tableFoot) {
+                console.error('Required table elements not found');
+                return;
             }
-            hideLoading();
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showNotification('Error loading meal data', 'error');
-            hideLoading();
+
+            // Clear existing content (except first and last columns)
+            // Keep the first (Name) and last (Total) column headers
+            while (tableHead.children.length > 2) {
+                tableHead.children[1].remove();
+            }
+            // Keep the first (Daily Total) and last (Grand Total) footer cells
+            while (tableFoot.children.length > 2) {
+                tableFoot.children[1].remove();
+            }
+
+            tableBody.innerHTML = '';
+
+            const totalColHeader = tableHead.querySelector('.total-col');
+
+            // Generate date headers with day and weekday
+            daysInMonth.forEach(dayInfo => {
+                const dateHeader = document.createElement('th');
+                dateHeader.className = 'date-header';
+
+                const dayNumber = document.createElement('span');
+                dayNumber.className = 'date-day';
+                dayNumber.textContent = dayInfo.day;
+
+                const weekday = document.createElement('span');
+                weekday.className = 'date-weekday';
+                weekday.textContent = dayInfo.date.toLocaleDateString('en-US', { weekday: 'short' });
+
+                dateHeader.appendChild(dayNumber);
+                dateHeader.appendChild(weekday);
+
+                dateHeader.title = dayInfo.date.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                tableHead.insertBefore(dateHeader, totalColHeader);
+
+                const dayTotal = document.createElement('td');
+                dayTotal.className = 'meal-cell fw-bold';
+                dayTotal.textContent = '0';
+                dayTotal.id = `day-total-${dayInfo.day}`;
+                tableFoot.insertBefore(dayTotal, tableFoot.lastElementChild);
+            });
+
+            // Generate member rows
+            let grandTotal = 0;
+            const dailyTotals = Array(daysInMonth.length).fill(0);
+
+            members.forEach((member) => {
+                const row = document.createElement('tr');
+                row.className = 'member-row';
+                const memberData = mealData[member.id] || { meals: {}, total: 0, mealEntries: {} };
+
+                // Member name column - FIRST COLUMN
+                const nameCell = document.createElement('td');
+                nameCell.className = 'name-col';
+                nameCell.textContent = member.name;
+                row.appendChild(nameCell);
+
+                // Meal cells for each day - DATE COLUMNS
+                let memberTotal = 0;
+
+                daysInMonth.forEach((dayInfo, dayIndex) => {
+                    const mealCell = document.createElement('td');
+                    const mealCount = memberData.meals[dayInfo.day] || 0;
+
+                    mealCell.className = 'meal-cell';
+                    mealCell.textContent = formatMealValue(mealCount);
+                    mealCell.setAttribute('data-member-id', member.id);
+                    mealCell.setAttribute('data-day', dayInfo.day);
+                    mealCell.setAttribute('data-date', dayInfo.date.toISOString().split('T')[0]);
+                    mealCell.setAttribute('data-meal-id', memberData.mealEntries[dayInfo.day] || '');
+
+                    // Store original value for cancel/revert
+                    mealCell.setAttribute('data-original-value', formatMealValue(mealCount));
+
+                    // Apply value-based coloring
+                    applyValueBasedColoring(mealCell, mealCount);
+
+                    if (dayInfo.isWeekend) {
+                        mealCell.classList.add('weekend');
+                    }
+
+                    // Add click event for editing
+                    mealCell.addEventListener('click', function () {
+                        if (!currentEditingCell) {
+                            startEditing(this);
+                        }
+                    });
+
+                    row.appendChild(mealCell);
+
+                    memberTotal += mealCount;
+                    dailyTotals[dayIndex] += mealCount;
+                });
+
+                // Total column - LAST COLUMN
+                const totalCell = document.createElement('td');
+                totalCell.className = 'total-col';
+                totalCell.textContent = formatMealValue(memberTotal);
+                totalCell.id = `member-total-${member.id}`;
+                row.appendChild(totalCell);
+
+                grandTotal += memberTotal;
+                tableBody.appendChild(row);
+            });
+
+            // Update daily totals and grand total
+            dailyTotals.forEach((total, index) => {
+                const dayTotalCell = document.getElementById(`day-total-${index + 1}`);
+                if (dayTotalCell) {
+                    dayTotalCell.textContent = formatMealValue(total);
+                    // Apply value-based coloring to daily totals
+                    applyValueBasedColoring(dayTotalCell, total);
+                }
+            });
+
+            const grandTotalElement = document.getElementById('grandTotal');
+            if (grandTotalElement) {
+                grandTotalElement.textContent = formatMealValue(grandTotal);
+            }
+        }
+
+        function applyValueBasedColoring(cell, value) {
+            // Remove any existing value classes
+            cell.classList.remove('value-0', 'value-1', 'value-2', 'value-3', 'value-4', 'value-5-plus');
+
+            // Apply appropriate class based on value
+            if (value === 0) {
+                cell.classList.add('value-0');
+            } else if (value === 1) {
+                cell.classList.add('value-1');
+            } else if (value === 2) {
+                cell.classList.add('value-2');
+            } else if (value === 3) {
+                cell.classList.add('value-3');
+            } else if (value === 4) {
+                cell.classList.add('value-4');
+            } else if (value >= 5) {
+                cell.classList.add('value-5-plus');
+            }
+        }
+
+        function formatMealValue(value) {
+            if (value === 0) return '0';
+            const num = parseFloat(value);
+            if (Number.isInteger(num)) return num.toString();
+            return num.toFixed(1);
+        }
+
+        function startEditing(cell) {
+            if (currentEditingCell) {
+                cancelEditing();
+            }
+
+            currentEditingCell = cell;
+            cell.classList.add('editing');
+
+            const currentValue = cell.textContent;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentValue === '0' ? '' : currentValue; // Clear '0' for easier input
+            input.style.fontSize = 'inherit';
+            input.style.fontWeight = 'inherit';
+            input.style.color = '#343a40'; // Ensure input text is dark
+
+            // Set original value for cancel/blur check
+            cell.setAttribute('data-original-value', currentValue);
+
+
+            cell.innerHTML = '';
+            cell.appendChild(input);
+            input.focus();
+            input.select();
+
+            // Handle input events
+            input.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    saveCellValue(input.value.trim());
+                } else if (e.key === 'Escape') {
+                    cancelEditing();
+                }
+            });
+
+            input.addEventListener('blur', function () {
+                if (currentEditingCell === cell) {
+                    const originalValue = cell.getAttribute('data-original-value');
+                    const newValue = input.value.trim();
+                    // Save if value changed, otherwise cancel to revert classes
+                    if (newValue !== originalValue && !(newValue === '' && originalValue === '0')) {
+                        saveCellValue(newValue);
+                    } else {
+                        cancelEditing();
+                    }
+                }
+            });
+        }
+
+        function cancelEditing() {
+            if (currentEditingCell) {
+                const cell = currentEditingCell;
+                const originalValue = cell.getAttribute('data-original-value') || '0';
+
+                cell.textContent = originalValue;
+                cell.classList.remove('editing');
+                currentEditingCell = null;
+
+                const mealCount = parseFloat(originalValue) || 0;
+                // Reapply value-based coloring
+                applyValueBasedColoring(cell, mealCount);
+            }
+        }
+
+        /* SAVE CELL VALUE - ORIGINAL LOGIC RESTORED */
+        async function saveCellValue(newValue) {
+            if (!currentEditingCell) return;
+
+            const cell = currentEditingCell;
+            const memberId = cell.getAttribute('data-member-id');
+            const day = parseInt(cell.getAttribute('data-day'));
+            const date = cell.getAttribute('data-date');
+            const mealId = cell.getAttribute('data-meal-id');
+            const originalValue = cell.getAttribute('data-original-value');
+
+
+            // Parse the value - allow floats and zero
+            let mealCount = 0;
+            if (newValue !== '' && !isNaN(newValue) && parseFloat(newValue) >= 0) {
+                mealCount = parseFloat(newValue);
+                if (mealCount < 0) mealCount = 0; // Prevent negative values
+            }
+
+            const formattedNewValue = formatMealValue(mealCount);
+
+            // Revert to original if no actual change
+            if (formattedNewValue === originalValue) {
+                cell.classList.remove('editing');
+                cell.textContent = originalValue;
+                currentEditingCell = null;
+                return;
+            }
+
+
+            // 1. Optimistic UI Update
+            cell.classList.remove('editing');
+            cell.textContent = formattedNewValue;
+
+            cell.setAttribute('data-original-value', formattedNewValue);
+            currentEditingCell = null; // Important: Clear editing state before fetch
+
+            // Apply value-based coloring
+            applyValueBasedColoring(cell, mealCount);
+
+            // 2. Prepare Data and Call Backend
+            const formData = {
+                member_id: memberId,
+                meal_count: mealCount,
+                meal_date: date,
+                description: 'Updated via Excel view'
+            };
+
+            let action = 'add_meal';
+            if (mealId && mealId !== '') {
+                action = 'update_meal';
+                formData.id = mealId;
+            }
+
+            // Calculate old value from local data for total update
+            const oldValue = mealData[memberId]?.meals[day] || 0;
+
+
+            try {
+                showSavingIndicator();
+
+                const response = await fetch("process/meal_actions.php", {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        action: action,
+                        ...formData
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    // 3. Update Local Data Structure
+                    if (!mealData[memberId]) {
+                        // This case handles a member being loaded but not having mealData initialized
+                        mealData[memberId] = { meals: {}, total: 0, mealEntries: {} };
+                    }
+
+                    mealData[memberId].meals[day] = mealCount;
+                    cell.setAttribute('data-meal-id', result.id || mealId); // Update ID for new entry or keep existing
+                    mealData[memberId].mealEntries[day] = result.id || mealId;
+
+                    // Update totals based on the difference
+                    const difference = mealCount - oldValue;
+                    mealData[memberId].total += difference;
+
+
+                    // 4. Update Totals in UI
+                    updateMemberTotal(memberId);
+                    updateDailyTotals();
+                    updateOverallStatistics();
+
+                    showToast('Success', 'Meal count updated successfully!', 'success');
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (error) {
+                showToast('Error', 'Failed to save: ' + error.message, 'error');
+                // Revert cell value and local data on error
+                cell.textContent = originalValue;
+                cell.setAttribute('data-original-value', originalValue);
+
+                // Revert value-based coloring
+                const originalMealCount = parseFloat(originalValue) || 0;
+                applyValueBasedColoring(cell, originalMealCount);
+
+                // Re-calculate and update totals based on the error revert
+                mealData[memberId].meals[day] = oldValue;
+                const difference = originalMealCount - mealCount; // Revert difference
+                mealData[memberId].total += difference;
+                updateMemberTotal(memberId);
+                updateDailyTotals();
+                updateOverallStatistics();
+
+            } finally {
+                hideSavingIndicator();
+            }
+        }
+
+        function updateMemberTotal(memberId) {
+            const member = mealData[memberId];
+            if (!member) return;
+
+            let total = 0;
+            // Recalculate total from meals array for robustness
+            Object.values(member.meals).forEach(count => {
+                total += count;
+            });
+
+            member.total = total;
+            const totalCell = document.getElementById(`member-total-${memberId}`);
+            if (totalCell) {
+                totalCell.textContent = formatMealValue(total);
+            }
+        }
+
+        function updateDailyTotals() {
+            const dailyTotals = Array(daysInMonth.length).fill(0);
+
+            // Calculate daily totals by iterating through all members' meal data
+            members.forEach(member => {
+                const memberData = mealData[member.id];
+                if (memberData) {
+                    Object.entries(memberData.meals).forEach(([day, count]) => {
+                        const dayIndex = parseInt(day) - 1;
+                        if (dayIndex >= 0 && dayIndex < dailyTotals.length) {
+                            dailyTotals[dayIndex] += count;
+                        }
+                    });
+                }
+            });
+
+            // Update UI for daily totals
+            dailyTotals.forEach((total, index) => {
+                const dayTotalCell = document.getElementById(`day-total-${index + 1}`);
+                if (dayTotalCell) {
+                    dayTotalCell.textContent = formatMealValue(total);
+                    // Apply value-based coloring to daily totals
+                    applyValueBasedColoring(dayTotalCell, total);
+                }
+            });
+
+            // Update grand total
+            const grandTotal = dailyTotals.reduce((sum, total) => sum + total, 0);
+            const grandTotalElement = document.getElementById('grandTotal');
+            if (grandTotalElement) {
+                grandTotalElement.textContent = formatMealValue(grandTotal);
+            }
+        }
+
+        function updateOverallStatistics() {
+            let totalMeals = 0;
+            let daysWithMeals = new Set();
+
+            members.forEach(member => {
+                const memberData = mealData[member.id];
+                if (memberData) {
+                    Object.entries(memberData.meals).forEach(([day, count]) => {
+                        totalMeals += count;
+                        if (count > 0) {
+                            daysWithMeals.add(day);
+                        }
+                    });
+                }
+            });
+
+            updateStatistics(totalMeals, daysWithMeals.size);
+        }
+
+        function showSavingIndicator() {
+            const indicator = document.getElementById('savingIndicator');
+            if (indicator) {
+                indicator.textContent = 'Saving...';
+                indicator.classList.remove('bg-success');
+                indicator.classList.add('bg-warning');
+                indicator.style.display = 'block';
+            }
+        }
+
+        function hideSavingIndicator() {
+            const indicator = document.getElementById('savingIndicator');
+            if (indicator) {
+                indicator.textContent = 'Saved Successfully!';
+                indicator.classList.remove('bg-warning');
+                indicator.classList.add('bg-success');
+                setTimeout(() => {
+                    indicator.style.display = 'none';
+                }, 2000);
+            }
+        }
+
+        /* UPDATE STATISTICS */
+        function updateStatistics(totalMeals, daysCount) {
+            const elements = {
+                'totalMealsCard': formatMealValue(totalMeals),
+                'daysWithMeals': daysCount,
+                // Avg per day is calculated against the number of days in the month, not daysCount (days with meals)
+                'avgPerDay': daysInMonth.length > 0 ? formatMealValue(totalMeals / daysInMonth.length) : '0'
+            };
+
+            Object.entries(elements).forEach(([id, value]) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = value;
+                }
+            });
+        }
+
+        /* UPDATE MONTH DISPLAY */
+        function updateMonthDisplay(month, year) {
+            const monthName = getMonthName(month);
+            const monthDisplay = document.getElementById('currentMonthDisplay');
+            if (monthDisplay) {
+                monthDisplay.textContent = `${monthName} ${year}`;
+            }
+        }
+
+        function getMonthName(month) {
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"];
+            return monthNames[parseInt(month) - 1] || 'Unknown Month';
+        }
+
+        /* TOAST NOTIFICATIONS */
+        function showToast(title, message, type = 'info') {
+            const toastEl = document.getElementById('liveToast');
+            const toastTitle = document.getElementById('toastTitle');
+            const toastMessage = document.getElementById('toastMessage');
+
+            if (!toastEl || !toastTitle || !toastMessage) {
+                console.error('Toast elements not found');
+                return;
+            }
+
+            const typeClasses = {
+                success: 'text-bg-success',
+                error: 'text-bg-danger',
+                warning: 'text-bg-warning',
+                info: 'text-bg-primary'
+            };
+
+            toastEl.className = `toast ${typeClasses[type] || 'text-bg-info'}`;
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        }
+
+        // Auto-load current month on page load
+        window.addEventListener('load', function () {
+            setTimeout(() => {
+                const filterMonth = document.getElementById('filter_month');
+                if (filterMonth && filterMonth.value) {
+                    loadMealSheet();
+                }
+            }, 1000);
         });
-}
-</script>
+    </script>
+</body>
+
+</html>

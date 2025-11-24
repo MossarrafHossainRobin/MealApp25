@@ -1,35 +1,21 @@
 <?php
 require_once '../config/database.php';
 
-// Initialize Database
-$db = new Database();
-$connection = $db->getConnection();
-
 header('Content-Type: application/json');
 
 try {
+    $db = new Database();
+    $connection = $db->getConnection();
+
     $month = $_GET['month'] ?? date('n');
     $year = $_GET['year'] ?? date('Y');
 
-    // Validate month and year
-    $month = intval($month);
-    $year = intval($year);
-
-    if ($month < 1 || $month > 12) {
-        $month = date('n');
-    }
-    if ($year < 2000 || $year > 2100) {
-        $year = date('Y');
-    }
-
-    // Format month with leading zero
+    // Calculate date range
     $monthFormatted = str_pad($month, 2, '0', STR_PAD_LEFT);
-
-    // Calculate date range for the selected month
     $firstDay = "$year-$monthFormatted-01";
     $lastDay = date('Y-m-t', strtotime($firstDay));
 
-    // Get bazar entries with member names for selected month only using DATE range
+    // Get bazar entries for selected month
     $stmt = $connection->prepare("
         SELECT 
             b.id, 
@@ -43,20 +29,29 @@ try {
         FROM bazar b 
         JOIN members m ON b.member_id = m.id 
         WHERE b.bazar_date BETWEEN ? AND ?
-        ORDER BY b.bazar_date DESC, b.created_at DESC
+        ORDER BY b.bazar_date DESC
     ");
 
     $stmt->execute([$firstDay, $lastDay]);
     $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // Calculate total amount (SUM of all amounts including negative)
+    $totalAmount = 0;
+    $totalEntries = count($entries);
+
+    foreach ($entries as $entry) {
+        $totalAmount += floatval($entry['amount']);
+    }
+
     echo json_encode([
         'success' => true,
+        'entries' => $entries,
         'month' => $month,
         'year' => $year,
+        'total_entries' => $totalEntries,
+        'total_amount' => $totalAmount, // This is the SUM of all amounts
         'first_day' => $firstDay,
-        'last_day' => $lastDay,
-        'entries' => $entries,
-        'total_entries' => count($entries)
+        'last_day' => $lastDay
     ]);
 
 } catch (Exception $e) {
