@@ -4,684 +4,1094 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meal Management System</title>
+    <title>MealMaster Pro | Meal Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         :root {
-            --primary: #2c5aa0;
-            --primary-light: #e8f0fe;
-            --secondary: #6c757d;
-            --success: #28a745;
-            --info: #17a2b8;
-            --warning: #ffc107;
-            --danger: #dc3545;
+            --primary: #e2136e;
+            --primary-dark: #c10c5c;
+            --primary-light: #f8e0ec;
+            --secondary: #2d3748;
+            --accent: #00d9c9;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
             --light: #f8f9fa;
-            --dark: #343a40;
-            --border: #dee2e6;
-            --card-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-            --hover-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+            --dark: #2d3748;
+            --gray: #718096;
+            --light-gray: #e2e8f0;
+            --card-shadow: 0 10px 30px rgba(226, 19, 110, 0.15);
+            --hover-shadow: 0 20px 40px rgba(226, 19, 110, 0.25);
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            --gradient-success: linear-gradient(135deg, var(--success) 0%, #219653 100%);
+            --gradient-accent: linear-gradient(135deg, var(--accent) 0%, #00b4a0 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            background-color: #f5f7fa;
-            color: #333;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            line-height: 1.5;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e2e8f0 100%);
+            color: var(--dark);
+            font-family: 'Segoe UI', system-ui, -apple-system, 'Roboto', sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
+        /* App Container */
         .app-container {
             max-width: 100%;
-            padding: 15px;
+            margin: 0 auto;
+            padding: 0;
+            min-height: 100vh;
         }
 
-        /* Header Styles */
+        /* Header - bKash Style */
         .app-header {
-            background: white;
-            border-radius: 12px;
-            box-shadow: var(--card-shadow);
-            padding: 20px;
-            margin-bottom: 20px;
+            background: var(--gradient-primary);
+            padding: 20px 0;
+            box-shadow: 0 4px 20px rgba(226, 19, 110, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-20px, -20px) rotate(360deg);
+            }
         }
 
         .app-title {
-            color: var(--primary);
-            font-weight: 600;
-            font-size: 1.5rem;
+            color: white;
+            font-weight: 800;
+            font-size: 1.8rem;
             margin-bottom: 5px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .app-subtitle {
-            color: var(--secondary);
-            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+            font-weight: 400;
+            opacity: 0.9;
         }
 
         .month-indicator {
-            background: var(--primary);
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
             color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 15px;
+            font-weight: 700;
             font-size: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
-        /* Control Panel */
+        /* Main Content */
+        .main-content {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Control Panel - bKash Card Style */
         .control-panel {
             background: white;
-            border-radius: 12px;
+            border-radius: 20px;
             box-shadow: var(--card-shadow);
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: none;
+            position: relative;
+            overflow: hidden;
         }
 
-        .control-panel .form-label {
-            font-weight: 600;
-            color: var(--dark);
+        .control-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .form-label {
+            font-weight: 700;
+            color: var(--secondary);
             margin-bottom: 8px;
+            font-size: 0.9rem;
         }
 
-        .control-panel .form-select,
-        .control-panel .form-control {
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 10px 15px;
+        .form-select,
+        .form-control {
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            padding: 12px 16px;
             font-size: 0.95rem;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
+            background: white;
         }
 
-        .control-panel .form-select:focus,
-        .control-panel .form-control:focus {
+        .form-select:focus,
+        .form-control:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
+            box-shadow: 0 0 0 3px rgba(226, 19, 110, 0.1);
+            transform: translateY(-2px);
         }
 
+        /* Enhanced Input Styling */
+        .form-control:valid {
+            border-color: var(--success);
+        }
+
+        .form-control:invalid {
+            border-color: var(--danger);
+        }
+
+        .input-error-message {
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Quick input hints */
+        .quick-input-hints {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .quick-input-btn {
+            padding: 4px 8px;
+            border: 1px solid var(--light-gray);
+            border-radius: 6px;
+            background: white;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quick-input-btn:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+
+        /* Focus states for better UX */
+        .form-control:focus {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(226, 19, 110, 0.15);
+        }
+
+        /* Buttons - bKash Style */
         .btn-primary {
-            background-color: var(--primary);
-            border-color: var(--primary);
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-weight: 600;
-            transition: all 0.2s;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 12px;
+            padding: 14px 24px;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(226, 19, 110, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
         }
 
         .btn-primary:hover {
-            background-color: #244a8a;
-            border-color: #244a8a;
-            transform: translateY(-1px);
-            box-shadow: var(--hover-shadow);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(226, 19, 110, 0.4);
         }
 
-        /* Stats Cards */
-        .stats-card {
+        .btn-outline-primary {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            background: transparent;
             border-radius: 12px;
+            padding: 14px 24px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(226, 19, 110, 0.3);
+        }
+
+        /* Stats Cards - Modern Design */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: 20px;
             box-shadow: var(--card-shadow);
+            padding: 25px;
+            transition: all 0.3s ease;
             border: none;
-            transition: all 0.3s;
-            margin-bottom: 20px;
-            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
         }
 
         .stats-card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-8px);
             box-shadow: var(--hover-shadow);
         }
 
-        .stats-card .card-body {
-            padding: 20px;
+        .stats-card.success::before {
+            background: var(--gradient-success);
+        }
+
+        .stats-card.accent::before {
+            background: var(--gradient-accent);
+        }
+
+        .stats-card.warning::before {
+            background: linear-gradient(135deg, var(--warning) 0%, #e67e22 100%);
+        }
+
+        .stats-icon {
+            font-size: 2.5rem;
+            opacity: 0.1;
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            color: var(--primary);
+        }
+
+        .stats-card.success .stats-icon {
+            color: var(--success);
+        }
+
+        .stats-card.accent .stats-icon {
+            color: var(--accent);
+        }
+
+        .stats-card.warning .stats-icon {
+            color: var(--warning);
         }
 
         .stats-card .card-title {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--secondary);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--gray);
             margin-bottom: 10px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         .stats-card .card-text {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--dark);
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--secondary);
             margin-bottom: 0;
         }
 
-        .stats-icon {
-            font-size: 2.5rem;
-            opacity: 0.2;
-            position: absolute;
-            right: 20px;
-            bottom: 20px;
-        }
-
-        /* Table Styles */
-        .table-container {
+        /* Form Container */
+        .meal-form-container {
             background: white;
-            border-radius: 12px;
+            border-radius: 20px;
             box-shadow: var(--card-shadow);
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-
-        .table-responsive {
-            max-height: 70vh;
-            overflow: auto;
-        }
-
-        .table {
-            margin-bottom: 0;
-            font-size: 0.875rem;
-        }
-
-        .table thead th {
-            background-color: var(--primary);
-            color: white;
+            padding: 30px;
+            margin-bottom: 25px;
             border: none;
-            padding: 12px 8px;
-            font-weight: 600;
-            position: sticky;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .meal-form-container::before {
+            content: '';
+            position: absolute;
             top: 0;
-            z-index: 10;
-        }
-
-        .table tbody td {
-            padding: 12px 8px;
-            vertical-align: middle;
-            border-color: var(--border);
-        }
-
-        .name-col {
-            background-color: #f0f4fc;
-            font-weight: 600;
-            position: sticky;
             left: 0;
-            z-index: 5;
-            min-width: 150px;
-        }
-
-        .total-col {
-            background-color: #e9ecef;
-            font-weight: 700;
-            position: sticky;
             right: 0;
-            z-index: 5;
-            min-width: 80px;
+            height: 4px;
+            background: var(--gradient-success);
         }
 
-        .date-header {
-            min-width: 70px;
-            text-align: center;
+        .form-section-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--secondary);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .date-day {
-            font-size: 1rem;
-            font-weight: 700;
-            display: block;
-        }
-
-        .date-weekday {
-            font-size: 0.75rem;
-            opacity: 0.9;
-            display: block;
-            margin-top: 2px;
-        }
-
-        .meal-cell {
-            min-width: 70px;
-            height: 50px;
-            text-align: center;
-            font-weight: 600;
-            vertical-align: middle;
-            transition: all 0.2s;
-            cursor: pointer;
+        /* Tables */
+        .data-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            padding: 25px;
+            margin-bottom: 25px;
+            border: none;
             position: relative;
         }
 
-        .meal-cell:hover {
-            background-color: var(--primary-light) !important;
+        .data-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-accent);
         }
 
-        /* Value-based cell coloring */
-        .meal-cell.value-0 {
-            background-color: #f8f9fa;
-            color: var(--secondary);
-        }
-
-        .meal-cell.value-1 {
-            background-color: #e8f5e8;
-            color: #2d5a2d;
-        }
-
-        .meal-cell.value-2 {
-            background-color: #e3f2fd;
-            color: #0d47a1;
-        }
-
-        .meal-cell.value-3 {
-            background-color: #fff3e0;
-            color: #e65100;
-        }
-
-        .meal-cell.value-4 {
-            background-color: #fce4ec;
-            color: #880e4f;
-        }
-
-        .meal-cell.value-5-plus {
-            background-color: #f3e5f5;
-            color: #4a148c;
-        }
-
-        .meal-cell.weekend {
-            opacity: 0.8;
-        }
-
-        .meal-cell.editing {
-            background: white !important;
-            border: 2px solid var(--primary) !important;
-            z-index: 100;
-            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.2);
-        }
-
-        .meal-cell input {
+        .data-table {
             width: 100%;
-            height: 100%;
-            border: none;
-            text-align: center;
-            font-weight: bold;
-            background: transparent;
-            outline: none;
-            font-size: inherit;
-            color: inherit;
+            border-collapse: collapse;
+            margin-top: 15px;
         }
 
-        /* Alternating row colors */
-        .member-row:nth-child(odd) .name-col {
-            background-color: #f0f4fc;
-        }
-
-        .member-row:nth-child(even) .name-col {
-            background-color: #e6ecf7;
-        }
-
-        .member-row:nth-child(odd) {
-            background-color: #fafbfd;
-        }
-
-        .member-row:nth-child(even) {
-            background-color: #f5f8fc;
-        }
-
-        .summary-row {
-            background-color: #f8f9fa;
+        .data-table th {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
             font-weight: 700;
+            font-size: 0.85rem;
+            position: sticky;
+            top: 0;
         }
 
-        .summary-row .name-col {
-            background-color: #e9ecef;
+        .data-table td {
+            padding: 15px 12px;
+            border-bottom: 1px solid var(--light-gray);
+            transition: all 0.2s ease;
         }
 
-        /* Legend */
-        .legend-container {
-            background: white;
+        .data-table tr:hover td {
+            background: var(--primary-light);
+            transform: scale(1.01);
+        }
+
+        .action-btn {
+            padding: 6px 12px;
             border-radius: 8px;
-            padding: 15px;
-            box-shadow: var(--card-shadow);
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            margin-right: 15px;
             font-size: 0.8rem;
-            font-weight: 500;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
         }
 
-        .legend-color {
-            width: 16px;
-            height: 16px;
-            border-radius: 3px;
-            margin-right: 5px;
-            border: 1px solid var(--border);
+        .btn-edit {
+            background: var(--primary-light);
+            color: var(--primary);
         }
 
-        /* Saving Indicator */
-        .saving-indicator {
+        .btn-delete {
+            background: #fee;
+            color: var(--danger);
+        }
+
+        .btn-edit:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-delete:hover {
+            background: var(--danger);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Notifications */
+        .notification {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: var(--success);
+            background: var(--gradient-success);
             color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
+            padding: 15px 25px;
+            border-radius: 50px;
             font-size: 14px;
             font-weight: bold;
-            z-index: 1000;
+            z-index: 10000;
             display: none;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-        }
-
-        /* Quick Actions */
-        .quick-actions {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-
-        .floating-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
             border: none;
-            font-size: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            background: var(--primary);
+            animation: slideInRight 0.5s ease;
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, var(--danger) 0%, #c0392b 100%);
+        }
+
+        .notification.warning {
+            background: linear-gradient(135deg, var(--warning) 0%, #e67e22 100%);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Custom Modal - Improved Design */
+        .custom-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 95%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--light-gray);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translate(-50%, -40%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translate(-50%, -50%);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            border-bottom: 2px solid var(--light-gray);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-title {
+            font-weight: 800;
+            color: var(--danger);
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .modal-body {
+            padding: 10px 0;
+        }
+
+        .modal-footer {
+            border-top: 2px solid var(--light-gray);
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+
+        .delete-details {
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .delete-detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 5px 0;
+        }
+
+        .delete-detail-label {
+            font-weight: 600;
+            color: var(--gray);
+        }
+
+        .delete-detail-value {
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 15px;
+            }
+
+            .app-title {
+                font-size: 1.4rem;
+            }
+
+            .month-indicator {
+                font-size: 0.9rem;
+                padding: 10px 15px;
+            }
+
+            .control-panel,
+            .meal-form-container,
+            .data-container {
+                padding: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .stats-card {
+                padding: 20px;
+            }
+
+            .stats-card .card-text {
+                font-size: 1.8rem;
+            }
+
+            .data-table {
+                font-size: 0.8rem;
+                display: block;
+                overflow-x: auto;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 10px 8px;
+                white-space: nowrap;
+            }
+
+            .modal-content {
+                padding: 20px;
+                margin: 10px;
+                width: calc(100% - 20px);
+            }
+
+            .form-section-title {
+                font-size: 1.1rem;
+            }
+
+            .btn-primary,
+            .btn-outline-primary {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .app-title {
+                font-size: 1.2rem;
+            }
+
+            .month-indicator {
+                font-size: 0.8rem;
+                padding: 8px 12px;
+            }
+
+            .control-panel,
+            .meal-form-container,
+            .data-container {
+                padding: 15px;
+            }
+
+            .stats-card {
+                padding: 15px;
+            }
+
+            .stats-card .card-text {
+                font-size: 1.6rem;
+            }
+
+            .data-table {
+                font-size: 0.75rem;
+            }
+
+            .modal-content {
+                padding: 15px;
+            }
+
+            .modal-title {
+                font-size: 1.2rem;
+            }
+
+            .delete-details {
+                padding: 10px;
+            }
+
+            .action-btn {
+                padding: 4px 8px;
+                font-size: 0.7rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .app-title {
+                font-size: 1.1rem;
+            }
+
+            .main-content {
+                padding: 10px;
+            }
+
+            .control-panel,
+            .meal-form-container,
+            .data-container {
+                padding: 12px;
+            }
+
+            .stats-grid {
+                gap: 10px;
+            }
+
+            .btn-primary,
+            .btn-outline-primary {
+                padding: 10px 15px;
+                font-size: 0.8rem;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 8px 6px;
+            }
+        }
+
+        /* Floating Action Button */
+        .floating-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
             color: white;
+            border: none;
+            font-size: 24px;
+            box-shadow: 0 8px 25px rgba(226, 19, 110, 0.4);
+            transition: all 0.3s ease;
+            z-index: 100;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .floating-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 12px 30px rgba(226, 19, 110, 0.6);
         }
 
-        /* Mobile Optimizations */
         @media (max-width: 768px) {
-            .app-container {
-                padding: 10px;
-            }
-
-            .app-header {
-                padding: 15px;
-            }
-
-            .app-title {
-                font-size: 1.25rem;
-            }
-
-            .month-indicator {
-                font-size: 0.9rem;
-                padding: 8px 15px;
-            }
-
-            .control-panel {
-                padding: 15px;
-            }
-
-            .stats-card .card-body {
-                padding: 15px;
-            }
-
-            .stats-card .card-text {
-                font-size: 1.5rem;
-            }
-
-            .table {
-                font-size: 0.8rem;
-            }
-
-            .name-col {
-                min-width: 120px;
-            }
-
-            .date-header {
-                min-width: 60px;
-            }
-
-            .meal-cell {
-                min-width: 60px;
-                height: 45px;
-            }
-
             .floating-btn {
-                width: 45px;
-                height: 45px;
-                font-size: 18px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+                bottom: 20px;
+                right: 20px;
             }
         }
 
+        /* Loading Animation */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Toast Container */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        /* Table responsive fixes */
+        @media (max-width: 768px) {
+            .table-responsive {
+                border: 1px solid var(--light-gray);
+                border-radius: 12px;
+                overflow: hidden;
+            }
+
+            .data-table {
+                min-width: 600px;
+            }
+        }
+
+        /* Form responsive fixes */
         @media (max-width: 576px) {
-            .app-title {
-                font-size: 1.1rem;
+            .row.g-3 {
+                margin: 0 -5px;
             }
 
-            .month-indicator {
-                font-size: 0.85rem;
-                padding: 6px 12px;
+            .row.g-3>[class*="col-"] {
+                padding: 0 5px;
             }
-
-            .name-col {
-                min-width: 100px;
-            }
-
-            .date-header {
-                min-width: 50px;
-            }
-
-            .meal-cell {
-                min-width: 50px;
-                height: 40px;
-            }
-
-            .date-day {
-                font-size: 0.9rem;
-            }
-
-            .date-weekday {
-                font-size: 0.7rem;
-            }
-        }
-
-        /* Scrollbar Styling */
-        .table-responsive::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        .table-responsive::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 4px;
-        }
-
-        .table-responsive::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
         }
     </style>
 </head>
 
 <body>
-    <div class="saving-indicator" id="savingIndicator">
-        <i class="bi bi-check-circle me-1"></i> Saved Successfully!
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <span id="notificationText"></span>
+    </div>
+
+    <!-- Delete Confirmation Modal - Improved Design -->
+    <div class="custom-modal" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="bi bi-exclamation-triangle-fill"></i>Delete Meal Entry
+                </h3>
+            </div>
+            <div class="modal-body">
+                <p class="mb-3 text-center text-danger fw-bold">This action cannot be undone!</p>
+                <p class="mb-3" id="deleteMessage">Are you sure you want to delete this meal entry?</p>
+
+                <div class="delete-details" id="deleteDetails">
+                    <!-- Details will be inserted here by JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex gap-2 w-100">
+                    <button class="btn btn-danger flex-fill fw-bold" onclick="confirmDelete()">
+                        <i class="bi bi-trash me-2"></i>Delete
+                    </button>
+                    <button class="btn btn-outline-secondary flex-fill" onclick="closeDeleteModal()">
+                        <i class="bi bi-x-circle me-2"></i>Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="app-container">
+        <!-- Header -->
         <div class="app-header">
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
-                <div class="mb-3 mb-md-0">
-                    <h1 class="app-title">
-                        <i class="bi bi-table me-2"></i>Meal Management
-                    </h1>
-                    <p class="app-subtitle">Click any cell to edit • Press Enter to save • Supports decimal values</p>
-                </div>
-                <div class="month-indicator">
-                    <i class="bi bi-calendar3 me-2"></i>
-                    <span id="currentMonthDisplay">Select Month</span>
+            <div class="main-content">
+                <div
+                    class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                    <div class="mb-3 mb-md-0">
+                        <h1 class="app-title">
+                            <i class="bi bi-egg-fried"></i>MealMaster Pro
+                        </h1>
+                        <p class="app-subtitle">Smart Meal Management System</p>
+                    </div>
+                    <div class="month-indicator">
+                        <i class="bi bi-calendar3 me-2"></i>
+                        <span id="currentMonthDisplay">Select Month</span>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="control-panel">
-            <div class="row g-3 align-items-end">
-                <div class="col-lg-4 col-md-6">
-                    <label class="form-label">Select Reporting Period</label>
-                    <div class="row g-2">
-                        <div class="col-7">
-                            <select id="filter_month" class="form-select">
-                                <option value="">-- Select Month --</option>
-                                <option value="01">January</option>
-                                <option value="02">February</option>
-                                <option value="03">March</option>
-                                <option value="04">April</option>
-                                <option value="05">May</option>
-                                <option value="06">June</option>
-                                <option value="07">July</option>
-                                <option value="08">August</option>
-                                <option value="09">September</option>
-                                <option value="10">October</option>
-                                <option value="11">November</option>
-                                <option value="12">December</option>
-                            </select>
-                        </div>
-                        <div class="col-5">
-                            <select id="filter_year" class="form-select">
-                                <option value="2026">2026</option>
-                                <option value="2025">2025</option>
-                                <option value="2024">2024</option>
-                                <option value="2023">2023</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <button class="btn btn-primary w-100 fw-bold" onclick="loadMealSheet()">
-                        <i class="bi bi-cloud-download me-2"></i>Load Data
-                    </button>
-                </div>
-
-                <div class="col-lg-5 col-md-12">
-                    <div
-                        class="d-flex flex-column flex-md-row justify-content-md-end gap-3 align-items-start align-items-md-center">
-                        <div class="legend-container">
-                            <span class="fw-bold me-2"><i
-                                    class="bi bi-info-circle-fill text-primary me-1"></i>Legend:</span>
-                            <div class="d-flex flex-wrap gap-2 mt-2">
-                                <div class="legend-item">
-                                    <div class="legend-color" style="background-color: #f8f9fa;"></div>
-                                    <span>0 Meals</span>
-                                </div>
-                                <div class="legend-item">
-                                    <div class="legend-color" style="background-color: #e8f5e8;"></div>
-                                    <span>1 Meal</span>
-                                </div>
-                                <div class="legend-item">
-                                    <div class="legend-color" style="background-color: #e3f2fd;"></div>
-                                    <span>2 Meals</span>
-                                </div>
-                                <div class="legend-item">
-                                    <div class="legend-color" style="background-color: #fff3e0;"></div>
-                                    <span>3 Meals</span>
-                                </div>
-                                <div class="legend-item">
-                                    <div class="legend-color" style="background-color: #fce4ec;"></div>
-                                    <span>4 Meals</span>
-                                </div>
-                                <div class="legend-item">
-                                    <div class="legend-color" style="background-color: #f3e5f5;"></div>
-                                    <span>5+ Meals</span>
-                                </div>
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="row g-3 align-items-end">
+                    <div class="col-lg-5 col-md-12">
+                        <label class="form-label"><i class="bi bi-calendar-range me-2"></i>Select Month & Year</label>
+                        <div class="row g-2">
+                            <div class="col-7">
+                                <select id="filter_month" class="form-select">
+                                    <option value="">-- Select Month --</option>
+                                    <option value="01">January</option>
+                                    <option value="02">February</option>
+                                    <option value="03">March</option>
+                                    <option value="04">April</option>
+                                    <option value="05">May</option>
+                                    <option value="06">June</option>
+                                    <option value="07">July</option>
+                                    <option value="08">August</option>
+                                    <option value="09">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                            </div>
+                            <div class="col-5">
+                                <select id="filter_year" class="form-select">
+                                    <option value="2024">2024</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2026">2026</option>
+                                </select>
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <button class="btn btn-primary w-100 fw-bold" onclick="loadMonthData()" id="loadBtn">
+                            <i class="bi bi-cloud-arrow-down me-2"></i>Load Month Data
+                        </button>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6">
+                        <button class="btn btn-outline-primary w-100 fw-bold" onclick="showAddMealForm()">
+                            <i class="bi bi-plus-circle me-2"></i>Add Meal
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row mb-4 g-3">
-            <div class="col-xl-3 col-md-6">
-                <div class="card stats-card">
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stats-card">
                     <div class="card-body position-relative">
-                        <h5 class="card-title"><i class="bi bi-people me-2"></i>Total Members</h5>
+                        <h5 class="card-title"><i class="bi bi-people-fill me-2"></i>Total Members</h5>
                         <h2 id="totalMembers" class="card-text">0</h2>
                         <i class="bi bi-people-fill stats-icon"></i>
                     </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card stats-card">
+                <div class="stats-card success">
                     <div class="card-body position-relative">
                         <h5 class="card-title"><i class="bi bi-egg-fried me-2"></i>Total Meals</h5>
                         <h2 id="totalMealsCard" class="card-text">0</h2>
                         <i class="bi bi-egg-fried stats-icon"></i>
                     </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card stats-card">
+                <div class="stats-card accent">
                     <div class="card-body position-relative">
-                        <h5 class="card-title"><i class="bi bi-calendar-check me-2"></i>Days with Meals</h5>
+                        <h5 class="card-title"><i class="bi bi-calendar-check me-2"></i>Active Days</h5>
                         <h2 id="daysWithMeals" class="card-text">0</h2>
                         <i class="bi bi-calendar-check stats-icon"></i>
                     </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card stats-card">
+                <div class="stats-card warning">
                     <div class="card-body position-relative">
-                        <h5 class="card-title"><i class="bi bi-lightning me-2"></i>Avg per Day</h5>
+                        <h5 class="card-title"><i class="bi bi-lightning-fill me-2"></i>Avg per Day</h5>
                         <h2 id="avgPerDay" class="card-text">0</h2>
-                        <i class="bi bi-lightning stats-icon"></i>
+                        <i class="bi bi-lightning-fill stats-icon"></i>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="table-container">
-            <div class="table-responsive">
-                <table class="table table-bordered mb-0" id="excelMealTable">
-                    <thead>
-                        <tr>
-                            <th class="name-col">Name</th>
-                            <th class="total-col">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody id="excelMealBody">
-                    </tbody>
-                    <tfoot>
-                        <tr class="summary-row">
-                            <td class="name-col">Daily Total</td>
-                            <td class="total-col" id="grandTotal">0</td>
-                        </tr>
-                    </tfoot>
-                </table>
+            <!-- Add Meal Form -->
+            <div class="meal-form-container" id="mealFormContainer" style="display: none;">
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <i class="bi bi-plus-circle"></i>Add New Meal Entry
+                    </h3>
+                    <form id="addMealForm">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="bi bi-person me-2"></i>Select Member
+                                </label>
+                                <select id="memberSelect" class="form-select" required>
+                                    <option value="">-- Select Member --</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="bi bi-calendar me-2"></i>Date
+                                </label>
+                                <input type="date" id="mealDate" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="bi bi-egg-fried me-2"></i>Number of Meals
+                                    <small class="text-muted d-block mt-1">Enter any value ≥ 0 (e.g., 1, 2.5, 0.75,
+                                        3.25)</small>
+                                </label>
+                                <input type="number" id="mealCount" class="form-control" min="0" step="any" value="1"
+                                    placeholder="Enter meal count" required oninput="validateMealCount(this)">
+                                <div class="form-text">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    You can enter any decimal value (0.1, 1.5, 2.75, etc.)
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="bi bi-chat-text me-2"></i>Description (Optional)
+                                </label>
+                                <input type="text" id="mealDescription" class="form-control"
+                                    placeholder="e.g., Lunch, Dinner, Breakfast, Special Meal">
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary flex-fill" id="saveBtn">
+                                        <i class="bi bi-save me-2"></i>Save Meal
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary flex-fill"
+                                        onclick="hideAddMealForm()">
+                                        <i class="bi bi-x-circle me-2"></i>Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
+
+            <!-- Meal History -->
+            <div class="data-container">
+                <h3 class="form-section-title">
+                    <i class="bi bi-clock-history"></i>Meal History for <span id="currentMonthTitle">Selected
+                        Month</span>
+                </h3>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Member</th>
+                                <th>Meals</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mealHistoryBody">
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">
+                                    <i class="bi bi-inbox me-2"></i>Select a month and click "Load Month Data"
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Member Totals -->
+            <div class="data-container">
+                <h3 class="form-section-title">
+                    <i class="bi bi-bar-chart"></i>Member Totals for <span id="currentMonthTotalsTitle">Selected
+                        Month</span>
+                </h3>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Member Name</th>
+                                <th>Total Meals</th>
+                                <th>Summary</th>
+                            </tr>
+                        </thead>
+                        <tbody id="memberTotalsBody">
+                            <tr>
+                                <td colspan="3" class="text-center text-muted py-4">
+                                    <i class="bi bi-inbox me-2"></i>No data available
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <div class="quick-actions">
-        <button class="btn floating-btn" title="Refresh Data" onclick="loadMealSheet()">
-            <i class="bi bi-arrow-clockwise"></i>
-        </button>
-    </div>
-
-    <div class="toast-container position-fixed top-0 end-0 p-3">
-        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header">
-                <strong class="me-auto" id="toastTitle">Notification</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body" id="toastMessage">
-                Hello, world! This is a toast message.
-            </div>
-        </div>
-    </div>
+    <!-- Floating Action Button -->
+    <button class="floating-btn" onclick="showAddMealForm()" title="Add New Meal">
+        <i class="bi bi-plus-lg"></i>
+    </button>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // All JavaScript functionality remains exactly the same
+        // Global variables
         let members = [];
         let currentMonth = '';
         let currentYear = new Date().getFullYear().toString();
-        let daysInMonth = [];
-        let mealData = {};
-        let currentEditingCell = null;
+        let currentMeals = [];
+        let mealToDelete = null;
 
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function () {
+            console.log('🚀 MealMaster Pro Initialized');
             initializeApp();
         });
 
@@ -689,13 +1099,32 @@
             await loadMembers();
             setupEventListeners();
             setDefaultDate();
+            setupQuickInputShortcuts(); // Add this line
+
+            // Auto-load current month data
+            setTimeout(() => {
+                if (currentMonth && currentYear) {
+                    loadMonthData();
+                }
+            }, 500);
         }
 
         function setupEventListeners() {
-            // Escape key to cancel editing
+            // Form submission
+            document.getElementById('addMealForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                saveMeal();
+            });
+
+            // Keyboard shortcuts
             document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape' && currentEditingCell) {
-                    cancelEditing();
+                if (e.ctrlKey && e.key === 'n') {
+                    e.preventDefault();
+                    showAddMealForm();
+                }
+                if (e.key === 'Escape') {
+                    closeDeleteModal();
+                    hideAddMealForm();
                 }
             });
         }
@@ -703,27 +1132,50 @@
         function setDefaultDate() {
             const now = new Date();
             const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const year = now.getFullYear().toString();
+
             document.getElementById('filter_month').value = month;
-            document.getElementById('filter_year').value = currentYear;
+            document.getElementById('filter_year').value = year;
+
+            // Set today's date as default for new meals
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('mealDate').value = today;
+
+            currentMonth = month;
+            currentYear = year;
+            updateMonthDisplay(month, year);
         }
 
-        /* LOAD MEMBERS - ORIGINAL FETCH */
+        /* LOAD MEMBERS */
         async function loadMembers() {
             try {
+                console.log('Loading members...');
                 const response = await fetch("process/meal_actions.php", {
                     method: "POST",
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: new URLSearchParams({ action: "load_members" })
                 });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
                 const data = await response.json();
+                console.log('Members response:', data);
 
                 if (data.status === 'success') {
-                    members = data.members;
+                    members = data.members || data.data?.members || [];
                     updateMemberCount();
+                    populateMemberSelect();
+                    console.log(`✅ Loaded ${members.length} members`);
+                    showNotification('Members loaded successfully', 'success');
                 } else {
-                    throw new Error(data.message);
+                    throw new Error(data.message || 'Failed to load members');
                 }
             } catch (error) {
-                showToast('Error', 'Failed to load members: ' + error.message, 'error');
+                console.error('❌ Error loading members:', error);
+                showNotification('Failed to load members: ' + error.message, 'error');
+                members = [];
             }
         }
 
@@ -734,13 +1186,25 @@
             }
         }
 
-        /* LOAD MEAL SHEET - ORIGINAL FETCH */
-        async function loadMealSheet() {
+        function populateMemberSelect() {
+            const memberSelect = document.getElementById('memberSelect');
+            memberSelect.innerHTML = '<option value="">-- Select Member --</option>';
+
+            members.forEach(member => {
+                const option = document.createElement('option');
+                option.value = member.id;
+                option.textContent = member.name; // Removed email as requested
+                memberSelect.appendChild(option);
+            });
+        }
+
+        /* LOAD MONTH DATA - FIXED */
+        async function loadMonthData() {
             const month = document.getElementById("filter_month").value;
             const year = document.getElementById("filter_year").value;
 
             if (!month) {
-                showToast('Warning', 'Please select a month first!', 'warning');
+                showNotification('Please select a month first!', 'warning');
                 return;
             }
 
@@ -748,9 +1212,10 @@
             currentYear = year;
 
             try {
+                showButtonLoading('loadBtn', 'Loading...');
                 updateMonthDisplay(month, year);
-                showToast('Loading', 'Loading meal data...', 'info');
 
+                console.log(`📅 Loading meals for ${year}-${month}`);
                 const response = await fetch("process/meal_actions.php", {
                     method: "POST",
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -761,527 +1226,522 @@
                     })
                 });
 
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
                 const data = await response.json();
+                console.log('Month data response:', data);
 
                 if (data.status === 'success') {
-                    processMealData(data.meals);
-                    renderExcelView();
-                    showToast('Success', `Loaded data for ${getMonthName(month)} ${year}`, 'success');
-                } else {
-                    throw new Error(data.message);
-                }
-            } catch (error) {
-                showToast('Error', 'Failed to load meal data: ' + error.message, 'error');
-            }
-        }
+                    // Handle different response structures
+                    currentMeals = data.meals || data.data?.meals || [];
 
-        function processMealData(meals) {
-            // Initialize data structure
-            mealData = {};
-            members.forEach(member => {
-                mealData[member.id] = {
-                    name: member.name,
-                    meals: {},
-                    total: 0,
-                    mealEntries: {} // Store actual meal entry IDs
-                };
-            });
-
-            // Process meals
-            let totalMeals = 0;
-            let daysWithMeals = new Set();
-
-            meals.forEach(meal => {
-                const mealDate = new Date(meal.meal_date);
-                const day = mealDate.getDate();
-
-                if (!mealData[meal.member_id]) {
-                    // Fallback in case member wasn't loaded (using real_name/member_name from meal record)
-                    mealData[meal.member_id] = {
-                        name: meal.real_name || meal.member_name || `Member ${meal.member_id}`,
-                        meals: {},
-                        total: 0,
-                        mealEntries: {}
-                    };
-                }
-
-                const mealCount = parseFloat(meal.meal_count) || 0;
-                mealData[meal.member_id].meals[day] = mealCount;
-                mealData[meal.member_id].mealEntries[day] = meal.id; // Store the meal ID
-                mealData[meal.member_id].total += mealCount;
-
-                totalMeals += mealCount;
-                if (mealCount > 0) {
-                    daysWithMeals.add(day);
-                }
-            });
-
-            // Generate days array for the month
-            generateDaysInMonth(parseInt(currentMonth), parseInt(currentYear));
-
-            // Update statistics
-            updateStatistics(totalMeals, daysWithMeals.size);
-        }
-
-        function generateDaysInMonth(month, year) {
-            daysInMonth = [];
-            const daysCount = new Date(year, month, 0).getDate();
-            const today = new Date();
-
-            for (let day = 1; day <= daysCount; day++) {
-                const date = new Date(year, month - 1, day);
-                daysInMonth.push({
-                    day: day,
-                    date: date,
-                    isWeekend: date.getDay() === 0 || date.getDay() === 6,
-                    isToday: false // Today indicator removed
-                });
-            }
-        }
-
-        function renderExcelView() {
-            const tableHead = document.querySelector('#excelMealTable thead tr');
-            const tableBody = document.querySelector('#excelMealTable tbody');
-            const tableFoot = document.querySelector('#excelMealTable tfoot tr');
-
-            if (!tableHead || !tableBody || !tableFoot) {
-                console.error('Required table elements not found');
-                return;
-            }
-
-            // Clear existing content (except first and last columns)
-            // Keep the first (Name) and last (Total) column headers
-            while (tableHead.children.length > 2) {
-                tableHead.children[1].remove();
-            }
-            // Keep the first (Daily Total) and last (Grand Total) footer cells
-            while (tableFoot.children.length > 2) {
-                tableFoot.children[1].remove();
-            }
-
-            tableBody.innerHTML = '';
-
-            const totalColHeader = tableHead.querySelector('.total-col');
-
-            // Generate date headers with day and weekday
-            daysInMonth.forEach(dayInfo => {
-                const dateHeader = document.createElement('th');
-                dateHeader.className = 'date-header';
-
-                const dayNumber = document.createElement('span');
-                dayNumber.className = 'date-day';
-                dayNumber.textContent = dayInfo.day;
-
-                const weekday = document.createElement('span');
-                weekday.className = 'date-weekday';
-                weekday.textContent = dayInfo.date.toLocaleDateString('en-US', { weekday: 'short' });
-
-                dateHeader.appendChild(dayNumber);
-                dateHeader.appendChild(weekday);
-
-                dateHeader.title = dayInfo.date.toLocaleDateString('en-US', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-                tableHead.insertBefore(dateHeader, totalColHeader);
-
-                const dayTotal = document.createElement('td');
-                dayTotal.className = 'meal-cell fw-bold';
-                dayTotal.textContent = '0';
-                dayTotal.id = `day-total-${dayInfo.day}`;
-                tableFoot.insertBefore(dayTotal, tableFoot.lastElementChild);
-            });
-
-            // Generate member rows
-            let grandTotal = 0;
-            const dailyTotals = Array(daysInMonth.length).fill(0);
-
-            members.forEach((member) => {
-                const row = document.createElement('tr');
-                row.className = 'member-row';
-                const memberData = mealData[member.id] || { meals: {}, total: 0, mealEntries: {} };
-
-                // Member name column - FIRST COLUMN
-                const nameCell = document.createElement('td');
-                nameCell.className = 'name-col';
-                nameCell.textContent = member.name;
-                row.appendChild(nameCell);
-
-                // Meal cells for each day - DATE COLUMNS
-                let memberTotal = 0;
-
-                daysInMonth.forEach((dayInfo, dayIndex) => {
-                    const mealCell = document.createElement('td');
-                    const mealCount = memberData.meals[dayInfo.day] || 0;
-
-                    mealCell.className = 'meal-cell';
-                    mealCell.textContent = formatMealValue(mealCount);
-                    mealCell.setAttribute('data-member-id', member.id);
-                    mealCell.setAttribute('data-day', dayInfo.day);
-                    mealCell.setAttribute('data-date', dayInfo.date.toISOString().split('T')[0]);
-                    mealCell.setAttribute('data-meal-id', memberData.mealEntries[dayInfo.day] || '');
-
-                    // Store original value for cancel/revert
-                    mealCell.setAttribute('data-original-value', formatMealValue(mealCount));
-
-                    // Apply value-based coloring
-                    applyValueBasedColoring(mealCell, mealCount);
-
-                    if (dayInfo.isWeekend) {
-                        mealCell.classList.add('weekend');
+                    // Handle member totals
+                    let memberTotals = {};
+                    if (data.member_totals) {
+                        memberTotals = data.member_totals;
+                    } else if (data.data?.member_totals) {
+                        memberTotals = data.data.member_totals;
+                    } else if (data.monthly_totals || data.data?.monthly_totals) {
+                        const monthlyTotals = data.monthly_totals || data.data?.monthly_totals || [];
+                        monthlyTotals.forEach(item => {
+                            memberTotals[item.member_id] = item;
+                        });
                     }
 
-                    // Add click event for editing
-                    mealCell.addEventListener('click', function () {
-                        if (!currentEditingCell) {
-                            startEditing(this);
-                        }
+                    const statistics = data.statistics || data.data?.statistics || {};
+
+                    console.log('Processed data:', {
+                        meals: currentMeals.length,
+                        memberTotals: Object.keys(memberTotals).length,
+                        statistics: statistics
                     });
 
-                    row.appendChild(mealCell);
+                    displayMealHistory(currentMeals);
+                    displayMemberTotals(memberTotals);
+                    updateStatistics(statistics);
 
-                    memberTotal += mealCount;
-                    dailyTotals[dayIndex] += mealCount;
-                });
-
-                // Total column - LAST COLUMN
-                const totalCell = document.createElement('td');
-                totalCell.className = 'total-col';
-                totalCell.textContent = formatMealValue(memberTotal);
-                totalCell.id = `member-total-${member.id}`;
-                row.appendChild(totalCell);
-
-                grandTotal += memberTotal;
-                tableBody.appendChild(row);
-            });
-
-            // Update daily totals and grand total
-            dailyTotals.forEach((total, index) => {
-                const dayTotalCell = document.getElementById(`day-total-${index + 1}`);
-                if (dayTotalCell) {
-                    dayTotalCell.textContent = formatMealValue(total);
-                    // Apply value-based coloring to daily totals
-                    applyValueBasedColoring(dayTotalCell, total);
+                    console.log(`✅ Loaded ${currentMeals.length} meals`);
+                    showNotification(`Loaded data for ${getMonthName(month)} ${year}`, 'success');
+                } else {
+                    throw new Error(data.message || 'Failed to load meal data');
                 }
-            });
+            } catch (error) {
+                console.error('❌ Error loading meal data:', error);
+                showNotification('Failed to load meal data: ' + error.message, 'error');
 
-            const grandTotalElement = document.getElementById('grandTotal');
-            if (grandTotalElement) {
-                grandTotalElement.textContent = formatMealValue(grandTotal);
+                // Clear tables on error
+                document.getElementById('mealHistoryBody').innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-4">
+                        <i class="bi bi-exclamation-triangle me-2"></i>Failed to load data
+                    </td>
+                </tr>
+            `;
+
+                document.getElementById('memberTotalsBody').innerHTML = `
+                <tr>
+                    <td colspan="3" class="text-center text-muted py-4">
+                        <i class="bi bi-exclamation-triangle me-2"></i>Failed to load data
+                    </td>
+                </tr>
+            `;
+
+                // Reset statistics
+                resetStatistics();
+            } finally {
+                hideButtonLoading('loadBtn', '<i class="bi bi-cloud-arrow-down me-2"></i>Load Month Data');
             }
         }
 
-        function applyValueBasedColoring(cell, value) {
-            // Remove any existing value classes
-            cell.classList.remove('value-0', 'value-1', 'value-2', 'value-3', 'value-4', 'value-5-plus');
+        function displayMealHistory(meals) {
+            const tbody = document.getElementById('mealHistoryBody');
 
-            // Apply appropriate class based on value
-            if (value === 0) {
-                cell.classList.add('value-0');
-            } else if (value === 1) {
-                cell.classList.add('value-1');
-            } else if (value === 2) {
-                cell.classList.add('value-2');
-            } else if (value === 3) {
-                cell.classList.add('value-3');
-            } else if (value === 4) {
-                cell.classList.add('value-4');
-            } else if (value >= 5) {
-                cell.classList.add('value-5-plus');
-            }
-        }
-
-        function formatMealValue(value) {
-            if (value === 0) return '0';
-            const num = parseFloat(value);
-            if (Number.isInteger(num)) return num.toString();
-            return num.toFixed(1);
-        }
-
-        function startEditing(cell) {
-            if (currentEditingCell) {
-                cancelEditing();
-            }
-
-            currentEditingCell = cell;
-            cell.classList.add('editing');
-
-            const currentValue = cell.textContent;
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.value = currentValue === '0' ? '' : currentValue; // Clear '0' for easier input
-            input.style.fontSize = 'inherit';
-            input.style.fontWeight = 'inherit';
-            input.style.color = '#343a40'; // Ensure input text is dark
-
-            // Set original value for cancel/blur check
-            cell.setAttribute('data-original-value', currentValue);
-
-
-            cell.innerHTML = '';
-            cell.appendChild(input);
-            input.focus();
-            input.select();
-
-            // Handle input events
-            input.addEventListener('keydown', function (e) {
-                if (e.key === 'Enter') {
-                    saveCellValue(input.value.trim());
-                } else if (e.key === 'Escape') {
-                    cancelEditing();
-                }
-            });
-
-            input.addEventListener('blur', function () {
-                if (currentEditingCell === cell) {
-                    const originalValue = cell.getAttribute('data-original-value');
-                    const newValue = input.value.trim();
-                    // Save if value changed, otherwise cancel to revert classes
-                    if (newValue !== originalValue && !(newValue === '' && originalValue === '0')) {
-                        saveCellValue(newValue);
-                    } else {
-                        cancelEditing();
-                    }
-                }
-            });
-        }
-
-        function cancelEditing() {
-            if (currentEditingCell) {
-                const cell = currentEditingCell;
-                const originalValue = cell.getAttribute('data-original-value') || '0';
-
-                cell.textContent = originalValue;
-                cell.classList.remove('editing');
-                currentEditingCell = null;
-
-                const mealCount = parseFloat(originalValue) || 0;
-                // Reapply value-based coloring
-                applyValueBasedColoring(cell, mealCount);
-            }
-        }
-
-        /* SAVE CELL VALUE - ORIGINAL LOGIC RESTORED */
-        async function saveCellValue(newValue) {
-            if (!currentEditingCell) return;
-
-            const cell = currentEditingCell;
-            const memberId = cell.getAttribute('data-member-id');
-            const day = parseInt(cell.getAttribute('data-day'));
-            const date = cell.getAttribute('data-date');
-            const mealId = cell.getAttribute('data-meal-id');
-            const originalValue = cell.getAttribute('data-original-value');
-
-
-            // Parse the value - allow floats and zero
-            let mealCount = 0;
-            if (newValue !== '' && !isNaN(newValue) && parseFloat(newValue) >= 0) {
-                mealCount = parseFloat(newValue);
-                if (mealCount < 0) mealCount = 0; // Prevent negative values
-            }
-
-            const formattedNewValue = formatMealValue(mealCount);
-
-            // Revert to original if no actual change
-            if (formattedNewValue === originalValue) {
-                cell.classList.remove('editing');
-                cell.textContent = originalValue;
-                currentEditingCell = null;
+            if (!meals || meals.length === 0) {
+                tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-4">
+                        <i class="bi bi-inbox me-2"></i>No meals found for selected month
+                    </td>
+                </tr>
+            `;
                 return;
             }
 
+            tbody.innerHTML = meals.map(meal => `
+            <tr>
+                <td><strong>${formatDate(meal.meal_date)}</strong></td>
+                <td>
+                    <div class="fw-bold">${meal.member_name || meal.real_name || `Member ${meal.member_id}`}</div>
+                </td>
+                <td><span class="badge bg-primary fs-6">${formatMealValue(meal.meal_count)}</span></td>
+                <td>${meal.description ? meal.description : '<span class="text-muted">-</span>'}</td>
+                <td>
+                    <div class="d-flex gap-1">
+                        <button class="btn btn-edit action-btn" onclick="editMeal(${meal.id})" title="Edit">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-delete action-btn" onclick="showDeleteModal(${meal.id})" title="Delete">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+        }
 
-            // 1. Optimistic UI Update
-            cell.classList.remove('editing');
-            cell.textContent = formattedNewValue;
+        function displayMemberTotals(memberTotals) {
+            const tbody = document.getElementById('memberTotalsBody');
 
-            cell.setAttribute('data-original-value', formattedNewValue);
-            currentEditingCell = null; // Important: Clear editing state before fetch
+            console.log('Displaying member totals:', memberTotals);
 
-            // Apply value-based coloring
-            applyValueBasedColoring(cell, mealCount);
-
-            // 2. Prepare Data and Call Backend
-            const formData = {
-                member_id: memberId,
-                meal_count: mealCount,
-                meal_date: date,
-                description: 'Updated via Excel view'
-            };
-
-            let action = 'add_meal';
-            if (mealId && mealId !== '') {
-                action = 'update_meal';
-                formData.id = mealId;
+            if (!memberTotals || Object.keys(memberTotals).length === 0) {
+                tbody.innerHTML = `
+                <tr>
+                    <td colspan="3" class="text-center text-muted py-4">
+                        <i class="bi bi-inbox me-2"></i>No member totals available
+                    </td>
+                </tr>
+            `;
+                return;
             }
 
-            // Calculate old value from local data for total update
-            const oldValue = mealData[memberId]?.meals[day] || 0;
+            // Create an array of all members with their totals
+            const totalsArray = members.map(member => {
+                const memberData = memberTotals[member.id];
 
+                if (memberData && typeof memberData === 'object') {
+                    return {
+                        member_id: member.id,
+                        member_name: memberData.member_name || memberData.name || member.name,
+                        total_meals: parseFloat(memberData.total_meals) || 0
+                    };
+                } else {
+                    return {
+                        member_id: member.id,
+                        member_name: member.name,
+                        total_meals: parseFloat(memberData) || 0
+                    };
+                }
+            }).filter(member => member.total_meals > 0)
+                .sort((a, b) => b.total_meals - a.total_meals);
+
+            console.log('Processed totals array:', totalsArray);
+
+            if (totalsArray.length === 0) {
+                tbody.innerHTML = `
+                <tr>
+                    <td colspan="3" class="text-center text-muted py-4">
+                        <i class="bi bi-inbox me-2"></i>No meals recorded for any member this month
+                    </td>
+                </tr>
+            `;
+                return;
+            }
+
+            tbody.innerHTML = totalsArray.map(member => `
+            <tr>
+                <td class="fw-bold">${member.member_name}</td>
+                <td><span class="badge bg-success fs-6">${formatMealValue(member.total_meals)}</span></td>
+                <td>${formatMealValue(member.total_meals)} meals</td>
+            </tr>
+        `).join('');
+        }
+
+        /* MEAL COUNT VALIDATION FUNCTIONS */
+        function validateMealCount(input) {
+            const value = parseFloat(input.value);
+
+            if (isNaN(value)) {
+                input.setCustomValidity('Please enter a valid number');
+                showInputError(input, 'Please enter a valid number');
+                return false;
+            }
+
+            if (value < 0) {
+                input.setCustomValidity('Meal count cannot be negative');
+                showInputError(input, 'Meal count cannot be negative');
+                return false;
+            }
+
+            // Clear any previous validation
+            input.setCustomValidity('');
+            clearInputError(input);
+            return true;
+        }
+
+        function showInputError(input, message) {
+            // Remove any existing error styling
+            clearInputError(input);
+
+            // Add error styling
+            input.style.borderColor = 'var(--danger)';
+            input.style.boxShadow = '0 0 0 3px rgba(231, 76, 60, 0.1)';
+
+            // Create or update error message
+            let errorElement = input.parentNode.querySelector('.input-error-message');
+            if (!errorElement) {
+                errorElement = document.createElement('div');
+                errorElement.className = 'input-error-message text-danger small mt-1';
+                input.parentNode.appendChild(errorElement);
+            }
+            errorElement.innerHTML = `<i class="bi bi-exclamation-triangle me-1"></i>${message}`;
+        }
+
+        function clearInputError(input) {
+            input.style.borderColor = '';
+            input.style.boxShadow = '';
+
+            const errorElement = input.parentNode.querySelector('.input-error-message');
+            if (errorElement) {
+                errorElement.remove();
+            }
+        }
+
+        /* ENHANCED SAVE MEAL FUNCTION */
+        async function saveMeal() {
+            const memberId = document.getElementById('memberSelect').value;
+            const mealDate = document.getElementById('mealDate').value;
+            const mealCountInput = document.getElementById('mealCount');
+            const mealCount = mealCountInput.value;
+            const description = document.getElementById('mealDescription').value;
+
+            // Validate all required fields
+            if (!memberId || !mealDate || !mealCount) {
+                showNotification('Please fill all required fields', 'warning');
+                return;
+            }
+
+            // Validate meal count with enhanced validation
+            if (!validateMealCount(mealCountInput)) {
+                return;
+            }
+
+            const mealCountNum = parseFloat(mealCount);
+
+            // Additional validation
+            if (isNaN(mealCountNum)) {
+                showInputError(mealCountInput, 'Please enter a valid number');
+                showNotification('Please enter a valid meal count', 'warning');
+                return;
+            }
+
+            if (mealCountNum < 0) {
+                showInputError(mealCountInput, 'Meal count cannot be negative');
+                showNotification('Meal count cannot be negative', 'warning');
+                return;
+            }
 
             try {
-                showSavingIndicator();
+                showButtonLoading('saveBtn', 'Saving...');
+
+                const formData = {
+                    member_id: memberId,
+                    meal_count: mealCountNum,
+                    meal_date: mealDate,
+                    description: description
+                };
+
+                console.log('Saving meal:', formData);
 
                 const response = await fetch("process/meal_actions.php", {
                     method: "POST",
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: new URLSearchParams({
-                        action: action,
+                        action: "add_meal",
                         ...formData
                     })
                 });
 
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
                 const result = await response.json();
+                console.log('Save response:', result);
 
                 if (result.status === 'success') {
-                    // 3. Update Local Data Structure
-                    if (!mealData[memberId]) {
-                        // This case handles a member being loaded but not having mealData initialized
-                        mealData[memberId] = { meals: {}, total: 0, mealEntries: {} };
+                    showNotification('Meal saved successfully!', 'success');
+                    resetMealForm();
+                    hideAddMealForm();
+
+                    // Reload the current month data if we're viewing a month
+                    if (currentMonth) {
+                        setTimeout(() => {
+                            loadMonthData();
+                        }, 500);
                     }
-
-                    mealData[memberId].meals[day] = mealCount;
-                    cell.setAttribute('data-meal-id', result.id || mealId); // Update ID for new entry or keep existing
-                    mealData[memberId].mealEntries[day] = result.id || mealId;
-
-                    // Update totals based on the difference
-                    const difference = mealCount - oldValue;
-                    mealData[memberId].total += difference;
-
-
-                    // 4. Update Totals in UI
-                    updateMemberTotal(memberId);
-                    updateDailyTotals();
-                    updateOverallStatistics();
-
-                    showToast('Success', 'Meal count updated successfully!', 'success');
                 } else {
-                    throw new Error(result.message);
+                    throw new Error(result.message || 'Failed to save meal');
                 }
             } catch (error) {
-                showToast('Error', 'Failed to save: ' + error.message, 'error');
-                // Revert cell value and local data on error
-                cell.textContent = originalValue;
-                cell.setAttribute('data-original-value', originalValue);
-
-                // Revert value-based coloring
-                const originalMealCount = parseFloat(originalValue) || 0;
-                applyValueBasedColoring(cell, originalMealCount);
-
-                // Re-calculate and update totals based on the error revert
-                mealData[memberId].meals[day] = oldValue;
-                const difference = originalMealCount - mealCount; // Revert difference
-                mealData[memberId].total += difference;
-                updateMemberTotal(memberId);
-                updateDailyTotals();
-                updateOverallStatistics();
-
+                console.error('❌ Error saving meal:', error);
+                showNotification('Failed to save meal: ' + error.message, 'error');
             } finally {
-                hideSavingIndicator();
+                hideButtonLoading('saveBtn', '<i class="bi bi-save me-2"></i>Save Meal');
             }
         }
 
-        function updateMemberTotal(memberId) {
-            const member = mealData[memberId];
-            if (!member) return;
+        /* DELETE MEAL FUNCTIONALITY - FIXED */
+        function showDeleteModal(mealId) {
+            const meal = currentMeals.find(m => m.id == mealId);
+            if (meal) {
+                mealToDelete = mealId;
 
-            let total = 0;
-            // Recalculate total from meals array for robustness
-            Object.values(member.meals).forEach(count => {
-                total += count;
-            });
+                // Create detailed delete information
+                const deleteDetails = `
+                <div class="delete-detail-item">
+                    <span class="delete-detail-label">Member:</span>
+                    <span class="delete-detail-value">${meal.member_name || meal.real_name || `Member ${meal.member_id}`}</span>
+                </div>
+                <div class="delete-detail-item">
+                    <span class="delete-detail-label">Date:</span>
+                    <span class="delete-detail-value">${formatDate(meal.meal_date)}</span>
+                </div>
+                <div class="delete-detail-item">
+                    <span class="delete-detail-label">Meals:</span>
+                    <span class="delete-detail-value">${formatMealValue(meal.meal_count)}</span>
+                </div>
+                <div class="delete-detail-item">
+                    <span class="delete-detail-label">Description:</span>
+                    <span class="delete-detail-value">${meal.description || 'None'}</span>
+                </div>
+            `;
 
-            member.total = total;
-            const totalCell = document.getElementById(`member-total-${memberId}`);
-            if (totalCell) {
-                totalCell.textContent = formatMealValue(total);
+                document.getElementById('deleteDetails').innerHTML = deleteDetails;
+                document.getElementById('deleteModal').style.display = 'block';
+
+                // Prevent body scroll when modal is open
+                document.body.style.overflow = 'hidden';
+            } else {
+                showNotification('Meal not found for deletion', 'error');
             }
         }
 
-        function updateDailyTotals() {
-            const dailyTotals = Array(daysInMonth.length).fill(0);
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+            mealToDelete = null;
+            // Restore body scroll
+            document.body.style.overflow = '';
+        }
 
-            // Calculate daily totals by iterating through all members' meal data
-            members.forEach(member => {
-                const memberData = mealData[member.id];
-                if (memberData) {
-                    Object.entries(memberData.meals).forEach(([day, count]) => {
-                        const dayIndex = parseInt(day) - 1;
-                        if (dayIndex >= 0 && dayIndex < dailyTotals.length) {
-                            dailyTotals[dayIndex] += count;
-                        }
-                    });
+        async function confirmDelete() {
+            if (!mealToDelete) {
+                showNotification('No meal selected for deletion', 'error');
+                return;
+            }
+
+            try {
+                showNotification('Deleting meal...', 'info');
+
+                const response = await fetch("process/meal_actions.php", {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        action: "delete_meal",
+                        id: mealToDelete
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-            });
 
-            // Update UI for daily totals
-            dailyTotals.forEach((total, index) => {
-                const dayTotalCell = document.getElementById(`day-total-${index + 1}`);
-                if (dayTotalCell) {
-                    dayTotalCell.textContent = formatMealValue(total);
-                    // Apply value-based coloring to daily totals
-                    applyValueBasedColoring(dayTotalCell, total);
+                const result = await response.json();
+                console.log('Delete response:', result);
+
+                if (result.status === 'success') {
+                    showNotification('Meal deleted successfully!', 'success');
+                    closeDeleteModal();
+
+                    // Reload current data
+                    if (currentMonth) {
+                        setTimeout(() => {
+                            loadMonthData();
+                        }, 500);
+                    }
+                } else {
+                    throw new Error(result.message || 'Failed to delete meal');
                 }
-            });
-
-            // Update grand total
-            const grandTotal = dailyTotals.reduce((sum, total) => sum + total, 0);
-            const grandTotalElement = document.getElementById('grandTotal');
-            if (grandTotalElement) {
-                grandTotalElement.textContent = formatMealValue(grandTotal);
+            } catch (error) {
+                console.error('❌ Error deleting meal:', error);
+                showNotification('Failed to delete meal: ' + error.message, 'error');
+            } finally {
+                mealToDelete = null;
             }
         }
 
-        function updateOverallStatistics() {
-            let totalMeals = 0;
-            let daysWithMeals = new Set();
-
-            members.forEach(member => {
-                const memberData = mealData[member.id];
-                if (memberData) {
-                    Object.entries(memberData.meals).forEach(([day, count]) => {
-                        totalMeals += count;
-                        if (count > 0) {
-                            daysWithMeals.add(day);
-                        }
-                    });
-                }
+        /* FORM MANAGEMENT */
+        function showAddMealForm() {
+            document.getElementById('mealFormContainer').style.display = 'block';
+            // Scroll to form
+            document.getElementById('mealFormContainer').scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
             });
-
-            updateStatistics(totalMeals, daysWithMeals.size);
         }
 
-        function showSavingIndicator() {
-            const indicator = document.getElementById('savingIndicator');
-            if (indicator) {
-                indicator.textContent = 'Saving...';
-                indicator.classList.remove('bg-success');
-                indicator.classList.add('bg-warning');
-                indicator.style.display = 'block';
-            }
+        function hideAddMealForm() {
+            document.getElementById('mealFormContainer').style.display = 'none';
+            resetMealForm();
         }
 
-        function hideSavingIndicator() {
-            const indicator = document.getElementById('savingIndicator');
-            if (indicator) {
-                indicator.textContent = 'Saved Successfully!';
-                indicator.classList.remove('bg-warning');
-                indicator.classList.add('bg-success');
+        function resetMealForm() {
+            document.getElementById('addMealForm').reset();
+            document.getElementById('mealCount').value = '1';
+            // Set today's date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('mealDate').value = today;
+        }
+
+        /* ENHANCED EDIT MEAL FUNCTION */
+        function editMeal(mealId) {
+            const meal = currentMeals.find(m => m.id == mealId);
+            if (meal) {
+                // Populate form with meal data
+                document.getElementById('memberSelect').value = meal.member_id;
+                document.getElementById('mealDate').value = meal.meal_date;
+                document.getElementById('mealCount').value = meal.meal_count;
+                document.getElementById('mealDescription').value = meal.description || '';
+
+                // Show the form
+                showAddMealForm();
+
+                showNotification('Edit mode activated. Update the values and save.', 'info');
+
+                // Focus on the meal count input for easy editing
                 setTimeout(() => {
-                    indicator.style.display = 'none';
-                }, 2000);
+                    document.getElementById('mealCount').focus();
+                    document.getElementById('mealCount').select();
+                }, 300);
             }
         }
 
-        /* UPDATE STATISTICS */
-        function updateStatistics(totalMeals, daysCount) {
+        /* QUICK INPUT SHORTCUTS */
+        function setupQuickInputShortcuts() {
+            const mealCountInput = document.getElementById('mealCount');
+
+            if (!mealCountInput) return;
+
+            // Add event listener for common quick inputs
+            mealCountInput.addEventListener('keydown', function (e) {
+                // Quick shortcuts for common values
+                if (e.ctrlKey) {
+                    switch (e.key) {
+                        case '1':
+                            e.preventDefault();
+                            this.value = '1';
+                            break;
+                        case '2':
+                            e.preventDefault();
+                            this.value = '2';
+                            break;
+                        case '5':
+                            e.preventDefault();
+                            this.value = '0.5';
+                            break;
+                        case '0':
+                            e.preventDefault();
+                            this.value = '0';
+                            break;
+                    }
+                }
+            });
+
+            // Add input for decimal values
+            mealCountInput.addEventListener('input', function (e) {
+                // Allow any decimal input but ensure it's valid
+                const value = this.value;
+                if (value === '' || value === '.') {
+                    return; // Allow empty or just decimal point for user convenience
+                }
+
+                const numValue = parseFloat(value);
+                if (!isNaN(numValue) && numValue >= 0) {
+                    clearInputError(this);
+                }
+            });
+
+            // Real-time validation as user types
+            mealCountInput.addEventListener('blur', function () {
+                validateMealCount(this);
+            });
+        }
+
+        /* HELPER FUNCTIONS */
+        function formatDate(dateString) {
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-US', {
+                    weekday: 'short',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            } catch (e) {
+                return dateString;
+            }
+        }
+
+        function formatMealValue(value) {
+            if (value === 0 || value === '0') return '0';
+            const num = parseFloat(value);
+            if (isNaN(num)) return '0';
+            if (Number.isInteger(num)) return num.toString();
+            return num.toFixed(1);
+        }
+
+        function updateStatistics(statistics) {
+            if (!statistics) {
+                resetStatistics();
+                return;
+            }
+
             const elements = {
-                'totalMealsCard': formatMealValue(totalMeals),
-                'daysWithMeals': daysCount,
-                // Avg per day is calculated against the number of days in the month, not daysCount (days with meals)
-                'avgPerDay': daysInMonth.length > 0 ? formatMealValue(totalMeals / daysInMonth.length) : '0'
+                'totalMealsCard': formatMealValue(statistics.total_meals || 0),
+                'daysWithMeals': statistics.unique_days || statistics.days_with_meals || 0,
+                'avgPerDay': statistics.avg_per_day || '0'
             };
 
             Object.entries(elements).forEach(([id, value]) => {
@@ -1292,13 +1752,21 @@
             });
         }
 
-        /* UPDATE MONTH DISPLAY */
+        function resetStatistics() {
+            document.getElementById('totalMealsCard').textContent = '0';
+            document.getElementById('daysWithMeals').textContent = '0';
+            document.getElementById('avgPerDay').textContent = '0';
+        }
+
         function updateMonthDisplay(month, year) {
             const monthName = getMonthName(month);
             const monthDisplay = document.getElementById('currentMonthDisplay');
-            if (monthDisplay) {
-                monthDisplay.textContent = `${monthName} ${year}`;
-            }
+            const monthTitle = document.getElementById('currentMonthTitle');
+            const monthTotalsTitle = document.getElementById('currentMonthTotalsTitle');
+
+            if (monthDisplay) monthDisplay.textContent = `${monthName} ${year}`;
+            if (monthTitle) monthTitle.textContent = `${monthName} ${year}`;
+            if (monthTotalsTitle) monthTotalsTitle.textContent = `${monthName} ${year}`;
         }
 
         function getMonthName(month) {
@@ -1307,40 +1775,58 @@
             return monthNames[parseInt(month) - 1] || 'Unknown Month';
         }
 
-        /* TOAST NOTIFICATIONS */
-        function showToast(title, message, type = 'info') {
-            const toastEl = document.getElementById('liveToast');
-            const toastTitle = document.getElementById('toastTitle');
-            const toastMessage = document.getElementById('toastMessage');
-
-            if (!toastEl || !toastTitle || !toastMessage) {
-                console.error('Toast elements not found');
-                return;
+        /* UI UTILITIES - FIXED */
+        function showButtonLoading(buttonId, text) {
+            const btn = document.getElementById(buttonId);
+            if (btn) {
+                btn.innerHTML = `<span class="loading-spinner me-2"></span>${text}`;
+                btn.disabled = true;
             }
-
-            const typeClasses = {
-                success: 'text-bg-success',
-                error: 'text-bg-danger',
-                warning: 'text-bg-warning',
-                info: 'text-bg-primary'
-            };
-
-            toastEl.className = `toast ${typeClasses[type] || 'text-bg-info'}`;
-            toastTitle.textContent = title;
-            toastMessage.textContent = message;
-
-            const toast = new bootstrap.Toast(toastEl);
-            toast.show();
         }
 
-        // Auto-load current month on page load
-        window.addEventListener('load', function () {
-            setTimeout(() => {
-                const filterMonth = document.getElementById('filter_month');
-                if (filterMonth && filterMonth.value) {
-                    loadMealSheet();
+        function hideButtonLoading(buttonId, text) {
+            const btn = document.getElementById(buttonId);
+            if (btn) {
+                btn.innerHTML = text;
+                btn.disabled = false;
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+
+            if (notification && notificationText) {
+                notificationText.textContent = message;
+                notification.className = 'notification';
+
+                if (type === 'error') {
+                    notification.classList.add('error');
+                } else if (type === 'warning') {
+                    notification.classList.add('warning');
                 }
-            }, 1000);
+
+                notification.style.display = 'block';
+
+                // Auto hide after 3 seconds
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('deleteModal').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeDeleteModal();
+            }
+        });
+
+        // Escape key to close modal
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closeDeleteModal();
+            }
         });
     </script>
 </body>

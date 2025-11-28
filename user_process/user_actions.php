@@ -32,14 +32,15 @@ class UserActions
             session_start();
         }
 
-        $stmt = $this->db->prepare("SELECT id, name, email, is_active FROM members WHERE email = ? AND is_active = 1");
+        // Remove the "AND is_active = 1" condition to allow all users regardless of active status
+        $stmt = $this->db->prepare("SELECT id, name, email, is_active FROM members WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_name'] = $user['name'];
-            $_SESSION['user_email'] = $user['email']; // Store email for API use
+            $_SESSION['user_email'] = $user['email'];
             $_SESSION['logged_in'] = true;
             return true;
         }
