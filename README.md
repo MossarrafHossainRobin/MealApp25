@@ -36,10 +36,10 @@
   <h3>Mobile Views</h3>
 
   <div style="display: flex; justify-content: center; align-items: flex-start; gap: 15px;">
-    <img src="bazar-mobile.png" alt="Bazar Mobile" width="22%" />
-    <img src="mobile-dashboard.png" alt="Mobile Dashboard" width="22%" />
+    <img src="mobile-dashboard.png" alt="Bazar Mobile" width="22%" />
+    <img src="bazar-mobile.png" alt="Mobile Dashboard" width="22%" />
     <img src="monthly-cost.png" alt="Monthly Cost" width="22%" />
-    <img src="mobile-dashboard.png" alt="Mobile Dashboard 2" width="22%" />
+    <img src="alert.png" alt="Mobile Dashboard 2" width="22%" />
   </div>
 
 
